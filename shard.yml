@@ -1,0 +1,13 @@
+name: naidira
+version: 0.1.0
+
+authors:
+  - Sam Wang <samofcorinth@gmx.ca>
+
+targets:
+  naidira:
+    main: src/naidira.cr
+
+crystal: 1.4.1
+
+license: MIT
