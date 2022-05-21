@@ -4,11 +4,13 @@ require "./word"
 class Dictionary
   extend BakedFileSystem
 
+  property words = Hash(String, Word).new
+
   bake_folder "./data"
 
-  def self.load
-    lines = get("words").each_line
-    lines.map do |line|
+  def initialize
+    lines = Dictionary.get("words").each_line
+    @words = lines.map do |line|
       parts = line.split '|'
       spelling = parts[0]
       word_type = WordType.new parts[1].to_i
@@ -26,6 +28,15 @@ class Dictionary
       else
         Word.new spelling, word_type, simple_meaning, formatted_meaning
       end
+    end.to_h do |word|
+      {word.spelling, word}
     end
+  end
+
+  def find(word)
+    words[word]
+  end
+
+  def save(filename = "./data/words")
   end
 end
