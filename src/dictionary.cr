@@ -34,9 +34,18 @@ class Dictionary
   end
 
   def find(word)
-    words[word]
+    words[word]?
   end
 
-  def save(filename = "./data/words")
+  def add(word)
+    words[word.spelling] = word
+  end
+
+  def save(filename = "#{__DIR__}/data/words")
+    File.open(filename, "w") do |file|
+      words.values.sort_by(&.spelling).each do |word|
+        file.puts word.to_entry
+      end
+    end
   end
 end

@@ -13,6 +13,10 @@ enum WordType
   def modifier?
     self == PrefixModifier || self == PostfixModifier
   end
+
+  def verb?
+    self == Verb0 || self == Verb1 || self == Verb2 || self == Verb3
+  end
 end
 
 class Word
@@ -42,6 +46,6 @@ class Modifier < Word
   end
 
   def to_entry
-    "#{super.to_entry}|#{modifiable_types.map(&.value).join(',')}|#{attachment_types.map(&.value).join(',')}|#{attachment_notes.join('^')}"
+    "#{super}|#{modifiable_types.map(&.value).join(',')}|#{attachment_types.map(&.value).join(',')}|#{attachment_notes.join('^')}"
   end
 end

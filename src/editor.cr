@@ -3,28 +3,81 @@ require "./dictionary"
 dictionary = Dictionary.new
 
 loop do
-  puts "Enter an option:
+  begin
+    puts "Enter an option:
 1. Search for words
 2. Add a word
 0. Quit
 "
 
-  input = gets.try &.to_i
-  case input
-  when 1
-    print "Enter a word: "
-    input = gets.try &.chomp
-    result = dictionary.find(input)
-    if result.nil?
-      puts "Word not found"
+    input = gets.try &.to_i
+    case input
+    when 1
+      search dictionary
+    when 2
+      add dictionary
+    when 0
+      dictionary.save
+      break
     else
-      puts result.pp
+      puts "Invalid selection"
     end
-  when 2
-    puts "TODO"
-  when 0
-    break
+
+  rescue exception
+    puts exception
+  end
+end
+
+def search(dictionary)
+  print "Enter a word: "
+  input = gets.try &.chomp
+  result = dictionary.find(input)
+  if result.nil?
+    puts "Word not found"
   else
-    puts "Invalid selection"
+    puts result.pp
+  end
+end
+
+def add(dictionary)
+  print "Enter the word: "
+  spelling = gets.try &.chomp
+  if spelling.nil?
+    puts "Did not receive input"
+    return
+  end
+  if existing = dictionary.find(spelling)
+    puts "Word already exists: #{existing.pp}"
+    return
+  end
+  puts "Select the word type:"
+  WordType.values.each_with_index do |type, index|
+    print "#{index}.#{type} "
+  end
+  puts
+  type = WordType.new(gets.try(&.to_i).not_nil!)
+  if type.modifier?
+    puts "TODO: Handle modifiers"
+    return
+  end
+  print "Enter the meaning: "
+  simple_meaning = gets.not_nil!.chomp
+  
+  if type.verb?
+    print "Enter the formatted meaning: "
+    formatted_meaning = gets.not_nil!.chomp
+  end
+
+  new_word = Word.new(spelling, type, simple_meaning, formatted_meaning.try &.empty? ? nil : formatted_meaning)
+  puts new_word.pp
+  loop do
+    print "Is this okay? (y/n) "
+    input = gets.not_nil!.chomp
+    if input == "y"
+      dictionary.add new_word
+      break
+    elsif input == "n"
+      break
+    end
   end
 end
