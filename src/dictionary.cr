@@ -1,6 +1,8 @@
 require "baked_file_system"
 require "./word"
 
+DICTIONARY_FILE = "#{__DIR__}/data/words"
+
 class Dictionary
   extend BakedFileSystem
 
@@ -9,7 +11,11 @@ class Dictionary
   bake_folder "./data"
 
   def initialize
-    lines = Dictionary.get("words").each_line
+    lines = if File.exists? DICTIONARY_FILE
+      File.new(DICTIONARY_FILE).each_line
+    else
+      Dictionary.get("words").each_line
+    end
     @words = lines.map do |line|
       parts = line.split '|'
       spelling = parts[0]
