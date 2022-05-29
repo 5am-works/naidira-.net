@@ -1,6 +1,6 @@
 require "./dictionary"
 
-dictionary = Dictionary.new
+dictionary = Dictionary.load
 
 loop do
   begin

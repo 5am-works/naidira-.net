@@ -1,3 +1,5 @@
+require "json"
+
 enum WordType
   Noun
   Adjective
@@ -20,6 +22,7 @@ enum WordType
 end
 
 class Word
+  include JSON::Serializable
   property spelling : String
   property type : WordType
   property simple_meaning : String

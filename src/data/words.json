@@ -1,0 +1,115 @@
+{
+  "words": {
+    "belaisi": {
+      "spelling": "belaisi",
+      "type": "verb2",
+      "simple_meaning": "sculpt, craft",
+      "formatted_meaning": "{0} crafts {1}"
+    },
+    "besane": {
+      "spelling": "besane",
+      "type": "noun",
+      "simple_meaning": "cloud"
+    },
+    "bova": {
+      "spelling": "bova",
+      "type": "adjective",
+      "simple_meaning": "dense, opaque"
+    },
+    "duna": {
+      "spelling": "duna",
+      "type": "noun",
+      "simple_meaning": "story, tale"
+    },
+    "file": {
+      "spelling": "file",
+      "type": "adjective",
+      "simple_meaning": "dark"
+    },
+    "gata": {
+      "spelling": "gata",
+      "type": "verb3",
+      "simple_meaning": "look for, find",
+      "formatted_meaning": "{0} looks for {1} around location {2}"
+    },
+    "kena": {
+      "spelling": "kena",
+      "type": "noun",
+      "simple_meaning": "soul, spirit"
+    },
+    "keze": {
+      "spelling": "keze",
+      "type": "adjective",
+      "simple_meaning": "blue"
+    },
+    "kuino": {
+      "spelling": "kuino",
+      "type": "noun",
+      "simple_meaning": "forest"
+    },
+    "kuna": {
+      "spelling": "kuna",
+      "type": "noun",
+      "simple_meaning": "water"
+    },
+    "me": {
+      "spelling": "me",
+      "type": "noun",
+      "simple_meaning": "this"
+    },
+    "meimo": {
+      "spelling": "meimo",
+      "type": "noun",
+      "simple_meaning": "blank slate (for writing)"
+    },
+    "moresa": {
+      "spelling": "moresa",
+      "type": "noun",
+      "simple_meaning": "mystery"
+    },
+    "moro": {
+      "spelling": "moro",
+      "type": "verb2",
+      "simple_meaning": "look at",
+      "formatted_meaning": "{0} looks at {1}"
+    },
+    "nanu": {
+      "spelling": "nanu",
+      "type": "verb2",
+      "simple_meaning": "open",
+      "formatted_meaning": "{0} opens {1}"
+    },
+    "peli": {
+      "spelling": "peli",
+      "type": "noun",
+      "simple_meaning": "sky"
+    },
+    "pena": {
+      "spelling": "pena",
+      "type": "verb1",
+      "simple_meaning": "sleep",
+      "formatted_meaning": "{0} sleeps"
+    },
+    "romi": {
+      "spelling": "romi",
+      "type": "noun",
+      "simple_meaning": "mind"
+    },
+    "sanai": {
+      "spelling": "sanai",
+      "type": "verb2",
+      "simple_meaning": "lie down, rest",
+      "formatted_meaning": "{0} lies down/rests at location {1}"
+    },
+    "temirani": {
+      "spelling": "temirani",
+      "type": "noun",
+      "simple_meaning": "obsidian"
+    },
+    "vele": {
+      "spelling": "vele",
+      "type": "noun",
+      "simple_meaning": "you (singular)"
+    }
+  }
+}
