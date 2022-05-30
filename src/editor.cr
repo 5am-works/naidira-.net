@@ -46,29 +46,42 @@ def add(dictionary)
     puts "Did not receive input"
     return
   end
+
   if existing = dictionary.find(spelling)
     puts "Word already exists: #{existing.pp}"
     return
   end
-  puts "Select the word type:"
-  WordType.values.each_with_index do |type, index|
-    print "#{index}.#{type} "
-  end
-  puts
-  type = WordType.new(gets.try(&.to_i).not_nil!)
-  if type.modifier?
-    puts "TODO: Handle modifiers"
-    return
-  end
+
+  type = prompt_type "Select the word type:"
+
   print "Enter the meaning: "
   simple_meaning = gets.not_nil!.chomp
   
   if type.verb?
     print "Enter the formatted meaning: "
     formatted_meaning = gets.not_nil!.chomp
+    new_word = Verb.new(spelling, type, simple_meaning, formatted_meaning)
+  elsif type.modifier?
+    print "Enter the number of modifiable types: "
+    count = gets.not_nil!.to_i
+    modifiable_types = Array.new(count) do |i|
+      prompt_type "Select a type (#{i}/#{count}):"
+    end
+
+    print "Enter the number of attachments: "
+    count = gets.not_nil!.to_i
+    attachment_types = Array.new(count) do |i|
+      prompt_type "Select the type for attachment (#{i}/#{count}):"
+    end
+
+    new_word = Modifier.new(spelling, type, simple_meaning, modifiable_types.to_set,
+      attachment_types, Array(String | Nil).new(count) { nil })
+  elsif type.noun?
+    new_word = Noun.new(spelling, type, simple_meaning)
+  else
+    new_word = Word.new(spelling, type, simple_meaning)
   end
 
-  new_word = Word.new(spelling, type, simple_meaning, formatted_meaning.try &.empty? ? nil : formatted_meaning)
   puts new_word.pp
   loop do
     print "Is this okay? (y/n) "
@@ -80,4 +93,13 @@ def add(dictionary)
       break
     end
   end
+end
+
+def prompt_type(prompt : String)
+  puts prompt
+  WordType.values.each_with_index do |type, index|
+    print "#{index}.#{type} "
+  end
+  puts
+  WordType.new(gets.try(&.to_i).not_nil!)
 end
