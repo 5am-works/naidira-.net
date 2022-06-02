@@ -31,8 +31,10 @@ class Word
     verb1: Verb,
     verb2: Verb,
     verb3: Verb,
-    prefixModifier: Modifier,
-    postfixModifier: Modifier
+    prefix_modifier: Modifier,
+    postfix_modifier: Modifier,
+    prefix_particle: Particle,
+    postfix_particle: Particle
   }
 
   property spelling : String
@@ -80,5 +82,15 @@ class Verb < Word
 
   def valency
     raise "TODO"
+  end
+end
+
+class Particle < Word
+  def prefix?
+    type == WordType::PrefixParticle
+  end
+
+  def postfix?
+    type == WordType::PostfixParticle
   end
 end

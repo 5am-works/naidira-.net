@@ -110,6 +110,11 @@
       "spelling": "vele",
       "type": "noun",
       "simple_meaning": "you (singular)"
+    },
+    "ta": {
+      "spelling": "ta",
+      "type": "postfix_particle",
+      "simple_meaning": "imperative marker (postfix)"
     }
   }
 }
