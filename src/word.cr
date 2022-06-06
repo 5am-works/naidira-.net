@@ -23,6 +23,12 @@ module Naidira::Lexicon
     end
   end
 
+  enum WordKind
+    Nounlike
+    Verblike
+    Any
+  end
+
   class Word
     include JSON::Serializable
     use_json_discriminator "type", {
@@ -45,15 +51,23 @@ module Naidira::Lexicon
     def initialize(@spelling, @type, @simple_meaning)
     end
 
-    def pp
-      "#{spelling} (#{type}, word): #{simple_meaning}"
+    def has_kind?(word_kind : WordKind)
+      word_kind == WordKind::Any
+    end
+
+    def inspect(io)
+      io << spelling << '{' << type << '}'
+    end
+
+    def to_s(io)
+      io << "#{spelling} (#{type}, word): #{simple_meaning}"
     end
   end
 
   class Modifier < Word
     include JSON::Serializable
-    property modifiable_types : Set(WordType)
-    property attachment_types : Array(WordType)
+    property modifiable_types : Set(WordKind)
+    property attachment_types : Array(WordKind)
     property attachment_notes : Array(String | Nil)
 
     def initialize(@spelling, @type, @simple_meaning, @modifiable_types, @attachment_types, @attachment_notes)
@@ -65,6 +79,10 @@ module Naidira::Lexicon
   end
 
   class Noun < Word
+    def has_kind?(word_kind : WordKind)
+      word_kind == WordKind::Nounlike
+    end
+
     def pp
       "#{spelling} (#{type}, noun): #{simple_meaning}"
     end
@@ -75,6 +93,10 @@ module Naidira::Lexicon
     property formatted_meaning : String
 
     def initialize(@spelling, @type, @simple_meaning, @formatted_meaning)
+    end
+
+    def has_kind?(word_kind : WordKind)
+      word_kind == WordKind::Verblike
     end
 
     def pp

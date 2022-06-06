@@ -9,7 +9,14 @@ module Naidira::Parser
     property predicate : Predicate?
     property arguments : Array(Argument?)
 
-    def initialize(@predicate, @arguments)
+    def initialize(@predicate, @arguments : Array(Argument?))
+    end
+
+    def inspect(io)
+      predicate.inspect(io)
+      io << "("
+      io << arguments
+      io << ")"
     end
   end
 
@@ -39,8 +46,7 @@ module Naidira::Parser
     end
 
     def add_argument(noun : Noun)
-      @last_read_argument = @arguments[@next_argument] = Argument.new noun
-      @next_argument += 1
+      @arguments[@next_argument] = Argument.new noun
     end
     
     def build
@@ -58,7 +64,6 @@ module Naidira::Parser
           if predicate.nil?
             raise "Read verb particle #{particle}, but no verb present"
           end
-          puts "Particle parsed"
           p.call(self, predicate)
         else
           @waiting_verb_particles << particle

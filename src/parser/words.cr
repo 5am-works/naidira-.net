@@ -8,8 +8,25 @@ module Naidira::Parser
   class Predicate
     property base_word : Verb
     property mood : Mood?
+    property modifiers : Set(Modifier)
 
-    def initialize(@base_word, @mood = nil)
+    def initialize(@base_word, @mood = nil, @modifiers = Set(Modifier).new)
+    end
+
+    def add_modifier(modifier : Modifier)
+      modifiers << modifier
+    end
+
+    def inspect(io)
+      io << base_word.spelling
+      case mood
+      when Mood::Imperative
+        io << '!'
+      end
+
+      unless modifiers.empty?
+        io << '<' << modifiers << '>'
+      end
     end
 
     def ==(other : Predicate)
@@ -18,9 +35,18 @@ module Naidira::Parser
   end
 
   class Argument
-    property base_word : Noun
+    property base_word : Set(Noun)
 
-    def initialize(@base_word)
+    def initialize(base_word)
+      @base_word = Set.new [base_word]
+    end
+
+    def add_adjective(adj : Noun)
+      base_word << adj
+    end
+
+    def inspect(io)
+      base_word.inspect(io)
     end
 
     def ==(other : Argument)
@@ -28,11 +54,22 @@ module Naidira::Parser
     end
   end
 
+  alias Attachment = Argument | Predicate
+
   class Modifier
     property base_word : LModifier
-    property attachments : Array(Argument)
+    property attachments : Array(Attachment)
 
-    def initialize(@base_word, @attachments = [] of Argument)
+    def initialize(@base_word, @attachments = [] of Attachment)
+    end
+
+    def add_attachment(attachment)
+      @attachments << attachment
+    end
+
+    def inspect(io)
+      base_word.inspect(io)
+      io << attachments
     end
 
     def ==(other : Argument)

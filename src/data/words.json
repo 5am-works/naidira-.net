@@ -115,6 +115,25 @@
       "spelling": "ta",
       "type": "postfix_particle",
       "simple_meaning": "imperative marker (postfix)"
+    },
+    "lefi": {
+      "spelling": "lefi",
+      "type": "prefix_modifier",
+      "simple_meaning": "6",
+      "modifiable_types": [
+        "any"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "besani": {
+      "spelling": "besani",
+      "type": "noun",
+      "simple_meaning": "cloud"
     }
   }
 }

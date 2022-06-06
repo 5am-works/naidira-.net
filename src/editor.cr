@@ -1,5 +1,7 @@
 require "./dictionary"
 
+include Naidira::Lexicon
+
 dictionary = Dictionary.load
 
 loop do
@@ -65,13 +67,13 @@ def add(dictionary)
     print "Enter the number of modifiable types: "
     count = gets.not_nil!.to_i
     modifiable_types = Array.new(count) do |i|
-      prompt_type "Select a type (#{i}/#{count}):"
+      prompt_kind "Select a type (#{i}/#{count}):"
     end
 
     print "Enter the number of attachments: "
     count = gets.not_nil!.to_i
     attachment_types = Array.new(count) do |i|
-      prompt_type "Select the type for attachment (#{i}/#{count}):"
+      prompt_kind "Select the type for attachment (#{i+1}/#{count}):"
     end
 
     new_word = Modifier.new(spelling, type, simple_meaning, modifiable_types.to_set,
@@ -102,4 +104,13 @@ def prompt_type(prompt : String)
   end
   puts
   WordType.new(gets.try(&.to_i).not_nil!)
+end
+
+def prompt_kind(prompt : String)
+  puts prompt
+  WordKind.values.each_with_index do |type, index|
+    print "#{index}.#{type} "
+  end
+  puts
+  WordKind.new(gets.not_nil!.to_i)
 end

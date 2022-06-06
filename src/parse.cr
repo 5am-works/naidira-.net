@@ -1,11 +1,13 @@
 require "./parser/parser"
 require "./dictionary"
 
+include Naidira::Parser
+
 print "Enter a sentence: "
 sentence = gets.not_nil!.chomp
 
 begin
-  result = parse sentence
+  result = Naidira::Parser.parse sentence
 
   puts "Parsed: #{result}"
 rescue exception
