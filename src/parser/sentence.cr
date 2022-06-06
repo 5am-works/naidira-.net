@@ -1,3 +1,4 @@
+require "../Dictionary"
 require "../word"
 require "./words"
 
@@ -5,51 +6,66 @@ DICTIONARY = Dictionary.load
 
 struct Sentence
   property predicate : Predicate?
-  property argument1 : Argument?
-  property argument2 : Argument?
-  property argument3 : Argument?
+  property arguments : Array(Argument?)
 
-  def validate_and_return
-    if predicate.nil? && argument1.nil? && argument2.nil? && argument3.nil?
-      raise "Empty sentence"
-    end
-
-    self
+  def initialize(@predicate, @arguments)
   end
 end
 
-def parse(sentence : String)
-  words = sentence.split
-  next_index = 0
-  sentence = Sentence.new
+class SentenceBuilder
+  property predicate : Predicate?
+  property arguments : Array(Argument?)
 
-  words.each do |input_word|
-    word = DICTIONARY.find input_word
-    if word.nil?
-      raise "Unrecognized word: #{input_word}"
-    elsif word.is_a? Verb
-      sentence.predicate = Predicate.new word
-    elsif word.is_a? Particle
-      if word.postfix?
-        VERB_PARTICLES[input_word]?.try do |verb_p|
-          predicate = sentence.predicate
-          if predicate.nil?
-            raise "Read verb modifier #{input_word}, but no verb present"
-          end
-
-          verb_p.call(predicate)
-        end
-      else
-        raise "TODO: Prefix particles"
-      end
-    elsif word.is_a? Noun
-      raise "TODO: Noun"
-    else
-      raise "Can't process #{word.spelling}"
-    end
-
-    next_index += 1
+  def initialize
+    @arguments = Array(Argument | Nil).new(3) { nil }
+    @next_argument = 0
+    @waiting_verb_particles = Array(Particle).new
   end
 
-  {sentence.validate_and_return, words[next_index..]}
+  def imperative!
+    if no_arguments?
+      @next_argument = 1
+    end
+  end
+
+  def add_predicate(verb : Verb)
+    if @predicate.nil?
+      @predicate = Predicate.new verb
+      true
+    else
+      false
+    end
+  end
+
+  def add_argument(noun : Noun)
+    @last_read_argument = @arguments[@next_argument] = Argument.new noun
+    @next_argument += 1
+  end
+  
+  def build
+    if predicate.nil? && no_arguments?
+      raise "Empty sentence"
+    end
+
+    Sentence.new predicate, arguments
+  end
+
+  def add_particle(particle : Particle)
+    VERB_PARTICLES[particle.spelling]?.try do |p|
+      if particle.postfix?
+        predicate = @predicate
+        if predicate.nil?
+          raise "Read verb particle #{particle}, but no verb present"
+        end
+        puts "Particle parsed"
+        p.call(self, predicate)
+      else
+        @waiting_verb_particles << particle
+      end
+    end || raise "Cannot handle particle #{particle.spelling}"
+  end
+
+  private def no_arguments?
+    arguments.all? &.nil?
+  end
 end
