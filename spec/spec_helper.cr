@@ -1,15 +1,21 @@
 require "spec"
 require "../src/naidira"
 
-def v(verb : String, mood : Mood?)
+include Naidira::Parser
+
+def v(verb : String)
   verb_entry = DICTIONARY.find(verb).not_nil!
 
   unless verb_entry.is_a? Verb
     raise "Not a verb: #{verb}"
   end
 
-  predicate = Predicate.new verb_entry
-  predicate.mood = mood
+  Predicate.new verb_entry
+end
+
+def v!(verb : String)
+  predicate = v verb
+  predicate.mood = Mood::Imperative
   predicate
 end
 

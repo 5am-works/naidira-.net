@@ -2,8 +2,11 @@ require "./spec_helper"
 
 describe Parser do
   it "can parse an imperative sentence" do
-    input = "nanu ta peli"
-    expected = s(v("nanu", mood: Mood::Imperative), [nil, n("peli"), nil])
-    parse(input).first.should eq(expected)
+    [
+      {"nanu ta peli", s(v!("nanu"), [nil, n("peli"), nil])},
+      {"moro ta romi", s(v!("moro"), [nil, n("romi"), nil])},
+    ].each do |(input, expected)|
+      parse(input).first.should eq(expected)
+    end
   end
 end

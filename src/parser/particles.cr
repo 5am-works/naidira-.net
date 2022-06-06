@@ -1,14 +1,16 @@
 require "./words"
 
-enum Mood
-  Imperative
-end
+include Naidira::Lexicon
 
-alias VerbParticleHandler = (SentenceBuilder, Predicate) -> Nil
-
-VERB_PARTICLES = {
-  "ta" => ->(s: SentenceBuilder, p: Predicate) do
-    p.mood = Mood::Imperative
-    s.imperative!
+module Naidira::Parser
+  enum Mood
+    Imperative
   end
-}
+
+  VERB_PARTICLES = {
+    "ta" => ->(s: SentenceBuilder, p: Predicate) do
+      p.mood = Mood::Imperative
+      s.imperative!
+    end
+  }
+end
