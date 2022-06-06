@@ -73,6 +73,14 @@ module Naidira::Lexicon
     def initialize(@spelling, @type, @simple_meaning, @modifiable_types, @attachment_types, @attachment_notes)
     end
 
+    def prefix?
+      type == WordType::PrefixModifier
+    end
+
+    def postfix?
+      type == WordType::PostfixModifier
+    end
+
     def pp
       "#{spelling} (#{type}, modifier): #{simple_meaning}"
     end

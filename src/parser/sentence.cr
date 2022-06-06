@@ -45,8 +45,8 @@ module Naidira::Parser
       end
     end
 
-    def add_argument(noun : Noun)
-      @arguments[@next_argument] = Argument.new noun
+    def add_argument(argument : Argument)
+      @arguments[@next_argument] = argument
     end
     
     def build

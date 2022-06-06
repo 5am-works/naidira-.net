@@ -17,6 +17,7 @@ module Naidira::Parser
     def parse!
       next_word = next_word!
       if next_word.nil?
+        push_last_argument
         @sentences << @sentence.build
       else
         begin
@@ -30,6 +31,7 @@ module Naidira::Parser
     end
 
     private def parse(verb : Verb)
+      push_last_argument
       unless @sentence.add_predicate verb
         @sentences << @sentence.build
         @sentence = SentenceBuilder.new
@@ -39,30 +41,40 @@ module Naidira::Parser
     end
 
     private def parse(particle : Particle)
+      push_last_argument
       @sentence.add_particle particle
       @last_read_argument = nil
     end
 
     private def parse(noun : Noun)
       if @last_read_argument.nil?
-        @last_read_argument = @sentence.add_argument noun
+        @last_read_argument = Argument.new noun
       else
         @last_read_argument.not_nil!.add_adjective noun
       end
     end
 
-    private def parse(modifier : LModifier)
-      attachments = modifier.attachment_types.each do |type|
-        attachment = expect type
-        case type
-        when WordKind::Nounlike
-          @last_read_argument = Argument.new attachment.as(Noun)
-        when WordKind::Verblike
-          Predicate.new attachment.as(Verb)
-        else
-          raise "TODO: #{type}"
+    private def parse(lmodifier : LModifier)
+      modifier = Modifier.new lmodifier
+      if lmodifier.prefix? && lmodifier.attachment_types.size == 1
+          modifier.add_attachment(@last_read_argument || raise "#{lmodifier} needs an attachment")
+          @last_read_argument = nil
+      else
+        push_last_argument
+        lmodifier.attachment_types.each do |type|
+          attachment = expect type
+          word = case type
+          when WordKind::Nounlike
+            @last_read_argument = Argument.new attachment.as(Noun)
+          when WordKind::Verblike
+            Predicate.new attachment.as(Verb)
+          else
+            raise "TODO: #{type}"
+          end
+          modifier.add_attachment word
         end
       end
+      modifier
     end
 
     private def parse(word)
@@ -89,6 +101,13 @@ module Naidira::Parser
         end
 
         word
+      end
+    end
+
+    private def push_last_argument
+      unless @last_read_argument.nil?
+        @sentence.add_argument @last_read_argument.not_nil!
+        @last_read_argument = nil
       end
     end
   end

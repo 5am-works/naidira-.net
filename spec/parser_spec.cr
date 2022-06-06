@@ -13,7 +13,7 @@ describe Parser do
   end
 
   it "can parse a sentence with a verb modifier" do
-    input = "lefi besani file sanai peli keze"
+    input = "besani file lefi sanai peli keze"
     expected = s(v("sanai", m("lefi", n("besani", "file"))), [n("peli", "keze"), nil, nil])
     Parser.parse(input).first.should eq(expected)
   end
