@@ -5,6 +5,8 @@ include Naidira::Lexicon
 alias LModifier = Naidira::Lexicon::Modifier
 
 module Naidira::Parser
+  alias Constituent = Predicate | Argument | Modifier
+
   class Predicate
     property base_word : Verb
     property mood : Mood?
@@ -67,12 +69,33 @@ module Naidira::Parser
       @attachments << attachment
     end
 
+    def waiting_for?(attachment_type)
+      if complete?
+        false
+      else
+        next_attachment = base_word.attachment_types[attachments.size]
+        next_attachment == attachment_type || next_attachment == WordKind::Any
+      end
+    end
+
+    def complete?
+      attachments.size == base_word.attachment_count
+    end
+
     def inspect(io)
       base_word.inspect(io)
       io << attachments
     end
 
-    def ==(other : Argument)
+    def prefix?
+      base_word.prefix?
+    end
+
+    def single_nounlike_attachment?
+      base_word.single_nounlike_attachment?
+    end
+
+    def ==(other : Modifier)
       base_word == other.base_word && attachments == other.attachments
     end
   end

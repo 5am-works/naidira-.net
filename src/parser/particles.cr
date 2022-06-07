@@ -1,4 +1,4 @@
-require "./words"
+require "./constituent"
 
 include Naidira::Lexicon
 
@@ -8,9 +8,8 @@ module Naidira::Parser
   end
 
   VERB_PARTICLES = {
-    "ta" => ->(s: SentenceBuilder, p: Predicate) do
+    "ta" => ->(p : Predicate) do
       p.mood = Mood::Imperative
-      s.imperative!
-    end
+    end,
   }
 end

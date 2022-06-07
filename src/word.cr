@@ -32,16 +32,16 @@ module Naidira::Lexicon
   class Word
     include JSON::Serializable
     use_json_discriminator "type", {
-      noun: Noun,
-      adjective: Noun,
-      verb0: Verb,
-      verb1: Verb,
-      verb2: Verb,
-      verb3: Verb,
-      prefix_modifier: Modifier,
+      noun:             Noun,
+      adjective:        Noun,
+      verb0:            Verb,
+      verb1:            Verb,
+      verb2:            Verb,
+      verb3:            Verb,
+      prefix_modifier:  Modifier,
       postfix_modifier: Modifier,
-      prefix_particle: Particle,
-      postfix_particle: Particle
+      prefix_particle:  Particle,
+      postfix_particle: Particle,
     }
 
     property spelling : String
@@ -73,12 +73,24 @@ module Naidira::Lexicon
     def initialize(@spelling, @type, @simple_meaning, @modifiable_types, @attachment_types, @attachment_notes)
     end
 
+    def attachment_count
+      attachment_types.size
+    end
+
     def prefix?
       type == WordType::PrefixModifier
     end
 
     def postfix?
       type == WordType::PostfixModifier
+    end
+
+    def single_nounlike_attachment?
+      attachment_count == 1 || attachment_types[0] == WordKind::Nounlike
+    end
+
+    def has_attachments?
+      attachment_count > 0
     end
 
     def pp

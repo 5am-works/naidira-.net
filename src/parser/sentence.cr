@@ -1,6 +1,6 @@
 require "../Dictionary"
 require "../word"
-require "./words"
+require "./constituent"
 
 DICTIONARY = Dictionary.load
 
@@ -48,7 +48,7 @@ module Naidira::Parser
     def add_argument(argument : Argument)
       @arguments[@next_argument] = argument
     end
-    
+
     def build
       if predicate.nil? && no_arguments?
         raise "Empty sentence"

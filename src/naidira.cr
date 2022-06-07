@@ -1,4 +1,5 @@
 require "./word"
+require "./parser/lexer"
 require "./parser/parser"
 
 # TODO: Write documentation for `Naidira`

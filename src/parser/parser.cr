@@ -57,20 +57,20 @@ module Naidira::Parser
     private def parse(lmodifier : LModifier)
       modifier = Modifier.new lmodifier
       if lmodifier.prefix? && lmodifier.attachment_types.size == 1
-          modifier.add_attachment(@last_read_argument || raise "#{lmodifier} needs an attachment")
-          @last_read_argument = nil
+        modifier.add_attachment(@last_read_argument || raise "#{lmodifier} needs an attachment")
+        @last_read_argument = nil
       else
         push_last_argument
         lmodifier.attachment_types.each do |type|
           attachment = expect type
           word = case type
-          when WordKind::Nounlike
-            @last_read_argument = Argument.new attachment.as(Noun)
-          when WordKind::Verblike
-            Predicate.new attachment.as(Verb)
-          else
-            raise "TODO: #{type}"
-          end
+                 when WordKind::Nounlike
+                   @last_read_argument = Argument.new attachment.as(Noun)
+                 when WordKind::Verblike
+                   Predicate.new attachment.as(Verb)
+                 else
+                   raise "TODO: #{type}"
+                 end
           modifier.add_attachment word
         end
       end

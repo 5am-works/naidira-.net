@@ -24,7 +24,6 @@ loop do
     else
       puts "Invalid selection"
     end
-
   rescue exception
     puts exception
   end
@@ -58,7 +57,7 @@ def add(dictionary)
 
   print "Enter the meaning: "
   simple_meaning = gets.not_nil!.chomp
-  
+
   if type.verb?
     print "Enter the formatted meaning: "
     formatted_meaning = gets.not_nil!.chomp
@@ -73,7 +72,7 @@ def add(dictionary)
     print "Enter the number of attachments: "
     count = gets.not_nil!.to_i
     attachment_types = Array.new(count) do |i|
-      prompt_kind "Select the type for attachment (#{i+1}/#{count}):"
+      prompt_kind "Select the type for attachment (#{i + 1}/#{count}):"
     end
 
     new_word = Modifier.new(spelling, type, simple_meaning, modifiable_types.to_set,

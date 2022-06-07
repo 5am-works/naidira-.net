@@ -14,10 +14,10 @@ module Naidira::Lexicon
 
     def self.load
       input_file = if File.exists? @@DICTIONARY_FILE
-        File.new(@@DICTIONARY_FILE)
-      else
-        Dictionary.get("words.json")
-      end
+                     File.new(@@DICTIONARY_FILE)
+                   else
+                     Dictionary.get("words.json")
+                   end
 
       Dictionary.from_json(input_file)
     end
