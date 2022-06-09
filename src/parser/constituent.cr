@@ -31,6 +31,10 @@ module Naidira::Parser
       end
     end
 
+    def imperative?
+      mood == Mood::Imperative
+    end
+
     def ==(other : Predicate)
       base_word == other.base_word && mood == other.mood
     end
@@ -87,8 +91,16 @@ module Naidira::Parser
       io << attachments
     end
 
+    def to_s(io)
+      inspect io
+    end
+
     def prefix?
       base_word.prefix?
+    end
+
+    def can_modify?(_p : Predicate)
+      base_word.modifiable_types.includes? WordKind::Verblike
     end
 
     def single_nounlike_attachment?

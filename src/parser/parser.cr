@@ -6,88 +6,59 @@ module Naidira::Parser
   alias LModifier = Naidira::Lexicon::Modifier
 
   class Parser
-    property words : Iterator(String)
+    property words : Iterator(Constituent)
 
     def initialize(words)
       @words = words.each
       @sentences = [] of Sentence
       @sentence = SentenceBuilder.new
+      @waiting_modifiers = Deque(Modifier).new
     end
 
     def parse!
       next_word = next_word!
       if next_word.nil?
-        push_last_argument
         @sentences << @sentence.build
       else
         begin
           parse next_word
           parse!
         rescue exception
-          puts "Error while parsing #{next_word.spelling}"
+          puts "Error while parsing #{next_word}"
           raise exception
         end
       end
     end
 
-    private def parse(verb : Verb)
-      push_last_argument
-      unless @sentence.add_predicate verb
+    private def parse(predicate : Predicate)
+      unless @waiting_modifiers.empty?
+        @waiting_modifiers.each do |modifier|
+          if modifier.can_modify? predicate
+            predicate.add_modifier modifier
+          else
+            raise "#{modifier} cannot modify #{predicate}"
+          end
+        end
+        @waiting_modifiers.clear
+      end
+
+      unless @sentence.add_predicate predicate
         @sentences << @sentence.build
         @sentence = SentenceBuilder.new
-        @sentence.add_predicate verb
       end
-      @last_read_argument = nil
+      @sentence.add_predicate predicate
     end
 
-    private def parse(particle : Particle)
-      push_last_argument
-      @sentence.add_particle particle
-      @last_read_argument = nil
+    private def parse(argument : Argument)
+      @sentence.add_argument argument
     end
 
-    private def parse(noun : Noun)
-      if @last_read_argument.nil?
-        @last_read_argument = Argument.new noun
+    private def parse(modifier : Modifier)
+      if modifier.prefix?
+        @waiting_modifier = modifier
       else
-        @last_read_argument.not_nil!.add_adjective noun
+        raise "TODO: Process #{modifier}"
       end
-    end
-
-    private def parse(lmodifier : LModifier)
-      modifier = Modifier.new lmodifier
-      if lmodifier.prefix? && lmodifier.attachment_types.size == 1
-        modifier.add_attachment(@last_read_argument || raise "#{lmodifier} needs an attachment")
-        @last_read_argument = nil
-      else
-        push_last_argument
-        lmodifier.attachment_types.each do |type|
-          attachment = expect type
-          word = case type
-                 when WordKind::Nounlike
-                   @last_read_argument = Argument.new attachment.as(Noun)
-                 when WordKind::Verblike
-                   Predicate.new attachment.as(Verb)
-                 else
-                   raise "TODO: #{type}"
-                 end
-          modifier.add_attachment word
-        end
-      end
-      modifier
-    end
-
-    private def parse(word)
-      raise "TODO: Process #{word.spelling}"
-    end
-
-    private def expect(word_kind : WordKind)
-      word = next_word! || raise "Expected to read a word of #{word_kind}"
-      unless word.has_kind? word_kind
-        raise "Expected #{word} to have kind #{word_kind}"
-      end
-
-      word
     end
 
     private def next_word!
@@ -95,26 +66,15 @@ module Naidira::Parser
       if next_word.is_a? Iterator::Stop
         nil
       else
-        word = DICTIONARY.find next_word
-        if word.nil?
-          raise "Unrecognized word: #{next_word}"
-        end
-
-        word
-      end
-    end
-
-    private def push_last_argument
-      unless @last_read_argument.nil?
-        @sentence.add_argument @last_read_argument.not_nil!
-        @last_read_argument = nil
+        next_word
       end
     end
   end
 
   def self.parse(sentence : String)
     words = sentence.split
-    parser = Parser.new words
+    constituents = Lexer.new(words).run
+    parser = Parser.new constituents
     parser.parse!
   end
 end

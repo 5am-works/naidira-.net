@@ -30,15 +30,12 @@ module Naidira::Parser
       @waiting_verb_particles = Array(Particle).new
     end
 
-    def imperative!
-      if no_arguments?
-        @next_argument = 1
-      end
-    end
-
-    def add_predicate(verb : Verb)
+    def add_predicate(predicate : Predicate)
       if @predicate.nil?
-        @predicate = Predicate.new verb
+        @predicate = predicate
+        if predicate.imperative? && no_arguments?
+          @next_argument = 1
+        end
         true
       else
         false
@@ -55,20 +52,6 @@ module Naidira::Parser
       end
 
       Sentence.new predicate, arguments
-    end
-
-    def add_particle(particle : Particle)
-      VERB_PARTICLES[particle.spelling]?.try do |p|
-        if particle.postfix?
-          predicate = @predicate
-          if predicate.nil?
-            raise "Read verb particle #{particle}, but no verb present"
-          end
-          p.call(self, predicate)
-        else
-          @waiting_verb_particles << particle
-        end
-      end || raise "Cannot handle particle #{particle.spelling}"
     end
 
     private def no_arguments?
