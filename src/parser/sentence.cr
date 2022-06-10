@@ -23,10 +23,15 @@ module Naidira::Parser
   class SentenceBuilder
     property predicate : Predicate?
     property arguments : Array(Argument?)
+    property omitted_argument : Int32?
 
-    def initialize
+    def initialize(@omitted_argument = nil)
       @arguments = Array(Argument | Nil).new(3) { nil }
-      @next_argument = 0
+      @next_argument = if @omitted_argument.nil? || @omitted_argument == 2
+        0
+      else
+        @omitted_argument.not_nil! + 1
+      end
       @waiting_verb_particles = Array(Particle).new
     end
 
@@ -47,11 +52,15 @@ module Naidira::Parser
     end
 
     def build
-      if predicate.nil? && no_arguments?
+      if empty?
         raise "Empty sentence"
       end
 
       Sentence.new predicate, arguments
+    end
+
+    def empty?
+      predicate.nil? && no_arguments?
     end
 
     private def no_arguments?

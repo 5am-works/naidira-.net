@@ -4,6 +4,8 @@ require "../src/naidira"
 include Naidira::Parser
 include Naidira::Lexicon
 
+SI = DICTIONARY.find("si").as(LModifier)
+
 def v(verb_entry : String, *modifiers)
   p = Predicate.new(verb(verb_entry))
   modifiers.each do |m|
@@ -18,12 +20,18 @@ def v!(verb : String, *modifiers)
   predicate
 end
 
-def n(noun : String, *adjectives)
+def n(noun : String, *adjectives, si : Sentence? = nil)
   entry = DICTIONARY.find(noun).not_nil!.as(Noun)
   a = Argument.new entry
   adjectives.each do |m|
     adjective = DICTIONARY.find(m).not_nil!.as(Noun)
     a.add_adjective adjective
+  end
+
+  unless si.nil?
+    si_modifier = Modifier.new(SI)
+    si_modifier.add_attachment si
+    a.add_modifier(si_modifier)
   end
   a
 end
@@ -37,7 +45,7 @@ def m(modifier : String, *attachments)
   modifier
 end
 
-def s(predicate : Predicate, arguments : Array(Argument?))
+def s(predicate : Predicate, arguments : Array(Argument?) = Array(Argument?).new(3) { nil })
   Sentence.new(predicate, arguments)
 end
 

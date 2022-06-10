@@ -15,6 +15,12 @@ describe Parser do
   it "can parse a sentence with a verb modifier" do
     input = "besani file lefi sanai peli keze"
     expected = s(v("sanai", m("lefi", n("besani", "file"))), [n("peli", "keze"), nil, nil])
-    Parser.parse(input).first.should eq(expected)
+    Parser.parse(input).should eq([expected])
+  end
+
+  it "can parse a sentence with a clause" do
+    input = "kuino bova lefi sanai moresa si pena"
+    expected = s(v("sanai", m("lefi", n("kuino", "bova"))), [n("moresa", si: s(v("pena"))), nil, nil])
+    Parser.parse(input).should eq([expected])
   end
 end

@@ -36,7 +36,7 @@ def search(dictionary)
   if result.nil?
     puts "Word not found"
   else
-    puts result.pp
+    puts result
   end
 end
 
@@ -49,7 +49,7 @@ def add(dictionary)
   end
 
   if existing = dictionary.find(spelling)
-    puts "Word already exists: #{existing.pp}"
+    puts "Word already exists: #{existing}"
     return
   end
 
@@ -83,7 +83,7 @@ def add(dictionary)
     new_word = Word.new(spelling, type, simple_meaning)
   end
 
-  puts new_word.pp
+  puts new_word
   loop do
     print "Is this okay? (y/n) "
     input = gets.not_nil!.chomp

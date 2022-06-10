@@ -27,6 +27,7 @@ module Naidira::Lexicon
     Nounlike
     Verblike
     Any
+    Sentence
   end
 
   class Word
@@ -91,6 +92,22 @@ module Naidira::Lexicon
 
     def has_attachments?
       attachment_count > 0
+    end
+
+    def modifies_any?
+      modifiable_types.first == WordKind::Any
+    end
+
+    def modifies_verbs?
+      modifiable_types.includes? WordKind::Verblike
+    end
+
+    def modifies_nouns?
+      modifiable_types.includes? WordKind::Nounlike
+    end
+
+    def sentence_attachment?
+      attachment_types.first == WordKind::Sentence
     end
 
     def pp

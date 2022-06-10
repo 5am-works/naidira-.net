@@ -39,8 +39,12 @@ module Naidira::Parser
     private def process(verb : Verb)
       predicate = Predicate.new verb
 
-      if waiting_for_predicate?
-        add_to_modifier predicate
+      unless @reading_modifier.nil?
+        if waiting_for_predicate?
+          add_to_modifier predicate
+        else
+          raise "Read #{verb}, but it is not compatible with #{@reading_modifier}"
+        end
       else
         @constituents << predicate
         @last_read_argument = nil
@@ -57,7 +61,7 @@ module Naidira::Parser
 
         modifier.add_attachment last_argument
         @constituents << modifier
-      elsif lmodifier.has_attachments?
+      elsif lmodifier.has_attachments? && !lmodifier.sentence_attachment?
         @reading_modifier = modifier
       else
         @constituents << modifier

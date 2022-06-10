@@ -36,31 +36,49 @@ module Naidira::Parser
     end
 
     def ==(other : Predicate)
-      base_word == other.base_word && mood == other.mood
+      base_word == other.base_word && mood == other.mood && modifiers == other.modifiers
     end
   end
 
   class Argument
     property base_word : Set(Noun)
+    property modifiers : Set(Modifier)
 
     def initialize(base_word)
       @base_word = Set.new [base_word]
+      @modifiers = Set(Modifier).new
     end
 
     def add_adjective(adj : Noun)
       base_word << adj
     end
 
+    def add_modifier(modifier : Modifier)
+      modifiers << modifier
+    end
+
     def inspect(io)
       base_word.inspect(io)
+      unless modifiers.empty?
+        io << "<"
+        io << modifiers
+        io << ">"
+      end
     end
 
     def ==(other : Argument)
-      base_word == other.base_word
+      base_word == other.base_word && modifiers == other.modifiers
     end
   end
 
-  alias Attachment = Argument | Predicate
+  class Reference
+    property argument : Argument
+
+    def initialize(@argument)
+    end
+  end
+
+  alias Attachment = Argument | Predicate | Sentence
 
   class Modifier
     property base_word : LModifier
@@ -100,11 +118,23 @@ module Naidira::Parser
     end
 
     def can_modify?(_p : Predicate)
-      base_word.modifiable_types.includes? WordKind::Verblike
+      base_word.modifies_verbs? || base_word.modifies_any?
+    end
+
+    def can_modify?(_a : Argument)
+      base_word.modifies_nouns? || base_word.modifies_any?
     end
 
     def single_nounlike_attachment?
       base_word.single_nounlike_attachment?
+    end
+
+    def sentence_attachment?
+      base_word.sentence_attachment?
+    end
+
+    def is?(modifier : String)
+      base_word.spelling == modifier
     end
 
     def ==(other : Modifier)

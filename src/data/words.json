@@ -134,6 +134,20 @@
       "spelling": "besani",
       "type": "noun",
       "simple_meaning": "cloud"
+    },
+    "si": {
+      "spelling": "si",
+      "type": "postfix_modifier",
+      "simple_meaning": "relative clause modifier, indicating that the modified argument is argument 1 of the following sentence",
+      "modifiable_types": [
+        "nounlike"
+      ],
+      "attachment_types": [
+        "sentence"
+      ],
+      "attachment_notes": [
+        null
+      ]
     }
   }
 }

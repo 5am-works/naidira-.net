@@ -7,7 +7,10 @@ print "Enter a sentence: "
 sentence = gets.not_nil!.chomp
 
 begin
-  result = Naidira::Parser.parse sentence
+  words = sentence.split
+  constituents = Lexer.new(words).run
+  puts "Constituents: #{constituents}"
+  result = Naidira::Parser.parse constituents
 
   puts "Parsed: #{result}"
 rescue exception
