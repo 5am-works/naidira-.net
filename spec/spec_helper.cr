@@ -6,6 +6,10 @@ include Naidira::Lexicon
 
 SI = DICTIONARY.find("si").as(LModifier)
 
+ATTRIBUTES = {
+  :vi => Attribute::Personal
+}
+
 def v(verb_entry : String, *modifiers)
   p = Predicate.new(verb(verb_entry))
   modifiers.each do |m|
@@ -20,12 +24,17 @@ def v!(verb : String, *modifiers)
   predicate
 end
 
-def n(noun : String, *adjectives, si : Sentence? = nil)
+def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = [] of Symbol)
   entry = DICTIONARY.find(noun).not_nil!.as(Noun)
   a = Argument.new entry
   adjectives.each do |m|
     adjective = DICTIONARY.find(m).not_nil!.as(Noun)
     a.add_adjective adjective
+  end
+
+  attr.each do |attribute|
+    attr = ATTRIBUTES[attribute]
+    a.add_attribute attr
   end
 
   unless si.nil?

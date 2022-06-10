@@ -101,8 +101,8 @@
       "simple_meaning": "lie down, rest",
       "formatted_meaning": "{0} lies down/rests at location {1}"
     },
-    "temirani": {
-      "spelling": "temirani",
+    "temirana": {
+      "spelling": "temirana",
       "type": "noun",
       "simple_meaning": "obsidian"
     },
@@ -148,6 +148,25 @@
       "attachment_notes": [
         null
       ]
+    },
+    "ni": {
+      "spelling": "ni",
+      "type": "prefix_modifier",
+      "simple_meaning": "in, inside",
+      "modifiable_types": [
+        "any"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "vi": {
+      "spelling": "vi",
+      "type": "postfix_particle",
+      "simple_meaning": "one's own"
     }
   }
 }

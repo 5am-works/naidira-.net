@@ -23,4 +23,10 @@ describe Parser do
     expected = s(v("sanai", m("lefi", n("kuino", "bova"))), [n("moresa", si: s(v("pena"))), nil, nil])
     Parser.parse(input).should eq([expected])
   end
+
+  it "can parse a sentence with a noun attribute" do
+    input = "kuna me ni gata ta kena temirana vi"
+    expected = s(v!("gata", m("ni", n("kuna", "me"))), [nil, n("kena", "temirana", attr: [:vi]), nil])
+    Parser.parse(input).should eq([expected])
+  end
 end

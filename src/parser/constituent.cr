@@ -42,11 +42,11 @@ module Naidira::Parser
 
   class Argument
     property base_word : Set(Noun)
-    property modifiers : Set(Modifier)
+    property modifiers = Set(Modifier).new
+    property attributes = Set(Attribute).new
 
     def initialize(base_word)
       @base_word = Set.new [base_word]
-      @modifiers = Set(Modifier).new
     end
 
     def add_adjective(adj : Noun)
@@ -55,6 +55,10 @@ module Naidira::Parser
 
     def add_modifier(modifier : Modifier)
       modifiers << modifier
+    end
+
+    def add_attribute(attr : Attribute)
+      attributes << attr
     end
 
     def inspect(io)
@@ -67,7 +71,8 @@ module Naidira::Parser
     end
 
     def ==(other : Argument)
-      base_word == other.base_word && modifiers == other.modifiers
+      base_word == other.base_word && modifiers == other.modifiers &&
+        attributes == other.attributes
     end
   end
 

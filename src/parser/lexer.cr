@@ -77,6 +77,9 @@ module Naidira::Parser
           predicate = @constituents.last? || raise "#{particle.spelling} needs a verb"
           v_particle.call predicate.as(Predicate)
           true
+        end || NOUN_PARTICLES[particle.spelling]?.try do |n_particle|
+          argument = @constituents.last? || raise "#{particle.spelling} needs a noun"
+          n_particle.call argument.as(Argument)
         end || raise "Unrecognized particle: #{particle.spelling}"
       end
       @last_read_argument = nil
