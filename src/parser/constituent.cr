@@ -96,7 +96,7 @@ module Naidira::Parser
       @attachments << attachment
     end
 
-    def waiting_for?(attachment_type)
+    def waiting_for?(attachment_type : WordKind)
       if complete?
         false
       else
@@ -122,8 +122,12 @@ module Naidira::Parser
       base_word.prefix?
     end
 
-    def can_modify?(_p : Predicate)
+    def modifies_verbs?
       base_word.modifies_verbs? || base_word.modifies_any?
+    end
+
+    def can_modify?(_p : Predicate)
+      modifies_verbs?
     end
 
     def can_modify?(_a : Argument)

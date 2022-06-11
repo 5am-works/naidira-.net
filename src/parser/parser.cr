@@ -91,8 +91,9 @@ module Naidira::Parser
       elsif modifier.is? "si"
         @reading_modifier = modifier
         read_partial_sentence omit: 0
-      else
-        raise "TODO: Process #{modifier}"
+      elsif modifier.modifies_verbs?
+        predicate = @sentence.predicate || raise "#{modifier} needs a verb"
+        predicate.add_modifier modifier
       end
     end
 

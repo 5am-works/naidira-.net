@@ -16,7 +16,10 @@ module Naidira::Parser
         lemma = DICTIONARY.find(word) || raise "Word not found: #{word}"
         process lemma
       end
-
+      
+      unless @reading_modifier.nil?
+        @constituents << @reading_modifier.not_nil!
+      end
       @constituents.to_a
     end
 
@@ -32,8 +35,8 @@ module Naidira::Parser
         add_to_modifier argument
       else
         @constituents << argument
-        @last_read_argument = argument
       end
+      @last_read_argument = argument
     end
 
     private def process(verb : Verb)
@@ -90,11 +93,11 @@ module Naidira::Parser
     end
 
     private def waiting_for_argument?
-      @reading_modifier.try(&.waiting_for? Argument)
+      @reading_modifier.try(&.waiting_for? WordKind::Nounlike)
     end
 
     private def waiting_for_predicate?
-      @reading_modifier.try(&.waiting_for? Predicate)
+      @reading_modifier.try(&.waiting_for? WordKind::Verblike)
     end
 
     private def add_to_modifier(attachment)

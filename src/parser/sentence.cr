@@ -26,11 +26,11 @@ module Naidira::Parser
     property omitted_argument : Int32?
 
     def initialize(@omitted_argument = nil)
-      @arguments = Array(Argument | Nil).new(3) { nil }
-      @next_argument = if @omitted_argument.nil? || @omitted_argument == 2
+      @arguments = Array(Argument | Nil).new(2) { nil }
+      @next_argument = if @omitted_argument.nil? || @omitted_argument == 1
         0
       else
-        @omitted_argument.not_nil! + 1
+        1
       end
       @waiting_verb_particles = Array(Particle).new
     end

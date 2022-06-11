@@ -167,6 +167,20 @@
       "spelling": "vi",
       "type": "postfix_particle",
       "simple_meaning": "one's own"
+    },
+    "siri": {
+      "spelling": "siri",
+      "type": "postfix_modifier",
+      "simple_meaning": "on",
+      "modifiable_types": [
+        "any"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
     }
   }
 }

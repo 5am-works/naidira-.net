@@ -46,7 +46,7 @@ def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = 
 end
 
 def m(modifier : String, *attachments)
-  entry = DICTIONARY.find(modifier).not_nil!.as(LModifier)
+  entry = (DICTIONARY.find(modifier) || raise "Modifier not found: #{modifier}").as(LModifier)
   modifier = Modifier.new entry
   attachments.each do |a|
     modifier.add_attachment(a)
@@ -54,14 +54,14 @@ def m(modifier : String, *attachments)
   modifier
 end
 
-def s(predicate : Predicate, arguments : Array(Argument?) = Array(Argument?).new(3) { nil })
+def s(predicate : Predicate, arguments : Array(Argument?) = Array(Argument?).new(2) { nil })
   Sentence.new(predicate, arguments)
 end
 
 def verb(v : String)
-  DICTIONARY.find(v).not_nil!.as(Verb)
+  (DICTIONARY.find(v) || raise "Verb not found: #{v}").as(Verb)
 end
 
 def noun(n : String)
-  DICTIONARY.find(n).not_nil!.as(Noun)
+  (DICTIONARY.find(n) || raise "Noun not found: #{n}").as(Noun)
 end
