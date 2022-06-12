@@ -25,8 +25,9 @@ module Naidira::Parser
     property arguments : Array(Argument?)
     property fixed_arguments : Array(Bool)
     property omitted_argument : Int32?
+    property waiting_for_ri : Bool
 
-    def initialize(@omitted_argument = nil)
+    def initialize(@omitted_argument = nil, ri : Bool = false)
       @arguments = Array(Argument | Nil).new(2) { nil }
       @fixed_arguments = Array(Bool).new(2) { false }
       @next_argument = if @omitted_argument.nil? || @omitted_argument == 1
@@ -35,6 +36,7 @@ module Naidira::Parser
         1
       end
       @waiting_verb_particles = Array(Particle).new
+      @waiting_for_ri = ri
     end
 
     def add_predicate(predicate : Predicate)
@@ -82,6 +84,10 @@ module Naidira::Parser
     def build
       if empty?
         raise "Empty sentence"
+      end
+
+      if waiting_for_ri
+        puts "Expected to read ri"
       end
 
       Sentence.new predicate, arguments

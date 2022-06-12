@@ -7,52 +7,53 @@ module Naidira::Parser
   alias LModifier = Naidira::Lexicon::Modifier
 
   class Parser
-    property words : Iterator(Constituent)
-    @reading_partial_sentence : SentenceBuilder?
+    property words : Deque(Constituent)
     @last_read : Predicate | Argument | Nil
+    @read_single_sentence = false
+    @single_sentence_complete = false
 
     def initialize(words)
-      @words = words.each
+      @words = Deque.new(words)
       @sentences = [] of Sentence
       @sentence = SentenceBuilder.new
       @waiting_modifiers = Deque(Modifier).new
       @waiting_particles = Deque(Particle).new
       @fix_next_argument = nil
-      @reading_partial_sentence = nil
-      @reading_modifier = nil
     end
 
-    def parse!
-      next_word = next_word!
-      if next_word.nil?
-        unless @reading_partial_sentence.nil?
-          ps = @reading_partial_sentence.not_nil!
-          if ps.empty?
-            raise "Did not read sentence for #{@reading_modifier}"
-          else
-            rm = @reading_modifier.not_nil!
-            rm.add_attachment ps.build
-            lr = @last_read
-            if !lr.nil? && rm.can_modify? lr
-              lr.add_modifier rm
-            else
-              raise "#{rm} cannot modify #{lr}"
-            end
-          end
-        end
-        @sentences << @sentence.build
-      else
+    def parse_all : Array(Sentence)
+      while !@words.empty?
+        next_word = @words.shift
         begin
           parse next_word
-          parse!
         rescue exception
           puts "Error while parsing #{next_word}"
           raise exception
         end
       end
+      unless @sentence.empty?
+        @sentences << @sentence.build
+      end
+      @sentences
     end
 
-    private def parse(predicate : Predicate)
+    def parse_one_sentence(omit : Int? = nil, ri : Bool = false) : Tuple(Sentence, Deque(Constituent))
+      @read_single_sentence = true
+      while !@words.empty?
+        next_word = @words.first
+        if parse next_word
+          @words.shift
+        else
+          break
+        end
+      end
+      if @sentences.empty?
+        @sentences << @sentence.build
+      end
+      {@sentences.first, @words}
+    end 
+
+    private def parse(predicate : Predicate) : Bool
       unless @waiting_particles.empty?
         @waiting_particles.each do |particle|
           VERB_PARTICLES[particle.spelling]?.try do |p|
@@ -61,16 +62,6 @@ module Naidira::Parser
           end || raise "#{particle} cannot be attached to a verb (#{predicate})" 
         end
         @waiting_particles.clear
-      end
-
-      unless @reading_partial_sentence.nil?
-        ps = @reading_partial_sentence.not_nil!
-        if ps.add_predicate predicate
-          return
-        else
-          @reading_modifier.not_nil!.add_attachment ps.build
-          @reading_partial_sentence = nil
-        end
       end
 
       unless @waiting_modifiers.empty?
@@ -86,10 +77,15 @@ module Naidira::Parser
 
       unless @sentence.add_predicate predicate
         @sentences << @sentence.build
-        @sentence = SentenceBuilder.new
+        if @read_single_sentence
+          return false
+        else
+          @sentence = SentenceBuilder.new
+        end
       end
       @sentence.add_predicate predicate
       @last_read = predicate
+      true
     end
 
     private def parse(argument : Argument)
@@ -118,31 +114,47 @@ module Naidira::Parser
         next_argument = @fix_next_argument.not_nil!
         unless @sentence.fix_argument next_argument, argument
           @sentences << @sentence.build
-          @sentence = SentenceBuilder.new
-          @sentence.fix_argument next_argument, argument
+          if @read_single_sentence
+            return false
+          else
+            @sentence = SentenceBuilder.new
+            @sentence.fix_argument next_argument, argument
+          end
         end 
         @fix_next_argument = nil
       else
         unless @sentence.add_argument argument
           @sentences << @sentence.build
-          @sentence = SentenceBuilder.new
-          @sentence.add_argument argument
+          if @read_single_sentence
+            return false
+          else
+            @sentence = SentenceBuilder.new
+            @sentence.add_argument argument
+          end
         end
       end
 
       @last_read = argument
+      true
     end
 
     private def parse(modifier : Modifier)
       if modifier.prefix?
         @waiting_modifiers << modifier
       elsif modifier.is? "si"
-        @reading_modifier = modifier
-        read_partial_sentence omit: 0
+        subclause = read_subclause(omit: 0)
+        modifier.add_attachment subclause
+      elsif modifier.is? "ro"
+        subclause = read_subclause(ri: true)
+        modifier.add_attachment subclause
       elsif modifier.modifies_verbs?
-        predicate = @sentence.predicate || raise "#{modifier} needs a verb"
+        predicate = @last_read.as? Predicate || @sentence.predicate ||
+          raise "#{modifier} needs a verb"
         predicate.add_modifier modifier
+      else
+        raise "TODO: Process #{modifier}"
       end
+      true
     end
 
     private def parse(particle : Particle)
@@ -156,24 +168,18 @@ module Naidira::Parser
           v_particle.call @sentence, predicate.as(Predicate)
           true
         end || NOUN_PARTICLES[particle.spelling]?.try do |n_particle|
-          argument = @last_read.is_a?(Argument) ? @last_read.as Argument :
-            raise "#{particle.spelling} needs a noun"
+          argument = @last_read.as?(Argument) || raise "#{particle.spelling} needs a noun"
           n_particle.call @sentence, argument.as(Argument)
         end || raise "Unrecognized particle: #{particle.spelling}"
       end
+      true
     end
 
-    private def read_partial_sentence(*, omit : Int)
-      @reading_partial_sentence = SentenceBuilder.new omit
-    end
-
-    private def next_word!
-      next_word = @words.next
-      if next_word.is_a? Iterator::Stop
-        nil
-      else
-        next_word
-      end
+    private def read_subclause(*args, **kwargs)
+      subparser = Parser.new @words.to_a
+      subclause, remaining_words = subparser.parse_one_sentence(*args, **kwargs)
+      @words = remaining_words
+      subclause
     end
   end
 
@@ -185,6 +191,6 @@ module Naidira::Parser
 
   def self.parse(constituents : Iterable(Constituent))
     parser = Parser.new constituents
-    parser.parse!
+    sentences = parser.parse_all
   end
 end

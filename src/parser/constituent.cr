@@ -38,6 +38,8 @@ module Naidira::Parser
       case mood
       when Mood::Imperative
         io << '!'
+      when Mood::Optative
+        io << '^'
       end
 
       unless modifiers.empty?
@@ -81,6 +83,14 @@ module Naidira::Parser
 
     def inspect(io)
       base_word.inspect(io)
+      unless attributes.empty?
+        attributes.each do |attribute|
+          case attribute
+          when Attribute::Personal
+            io << '%'
+          end
+        end
+      end
       unless modifiers.empty?
         io << "<"
         io << modifiers

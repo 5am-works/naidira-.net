@@ -10,8 +10,9 @@ ATTRIBUTES = {
   :vi => Attribute::Personal
 }
 
-def v(verb_entry : String, *modifiers, tense : Tense? = nil)
+def v(verb_entry : String, *modifiers, mood : Mood? = nil, tense : Tense? = nil)
   p = Predicate.new(verb(verb_entry))
+  p.mood = mood
   p.tense = tense
   modifiers.each do |m|
     p.add_modifier m
@@ -25,7 +26,8 @@ def v!(verb : String, *modifiers)
   predicate
 end
 
-def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = [] of Symbol)
+def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = [] of Symbol,
+  m : Array(Modifier) = [] of Modifier)
   entry = DICTIONARY.find(noun).not_nil!.as(Noun)
   a = Argument.new entry
   adjectives.each do |m|
@@ -46,7 +48,7 @@ def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = 
   a
 end
 
-def m(modifier : String, *attachments)
+def m(modifier : String, *attachments : Attachment)
   entry = (DICTIONARY.find(modifier) || raise "Modifier not found: #{modifier}").as(LModifier)
   modifier = Modifier.new entry
   attachments.each do |a|
