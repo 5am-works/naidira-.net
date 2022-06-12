@@ -181,6 +181,370 @@
       "attachment_notes": [
         null
       ]
+    },
+    "levi": {
+      "spelling": "levi",
+      "type": "noun",
+      "simple_meaning": "head (body part)"
+    },
+    "ti": {
+      "spelling": "ti",
+      "type": "prefix_particle",
+      "simple_meaning": "imperative particle"
+    },
+    "bome": {
+      "spelling": "bome",
+      "type": "verb2",
+      "simple_meaning": "put down, lower",
+      "formatted_meaning": "{0} lowers {1}"
+    },
+    "leimi": {
+      "spelling": "leimi",
+      "type": "noun",
+      "simple_meaning": "eye"
+    },
+    "mara": {
+      "spelling": "mara",
+      "type": "verb2",
+      "simple_meaning": "close",
+      "formatted_meaning": "{0} closes {1}"
+    },
+    "mailomi": {
+      "spelling": "mailomi",
+      "type": "noun",
+      "simple_meaning": "worry, trouble"
+    },
+    "gemi": {
+      "spelling": "gemi",
+      "type": "verb1",
+      "simple_meaning": "go away, disappear",
+      "formatted_meaning": "{0} disappears"
+    },
+    "rita": {
+      "spelling": "rita",
+      "type": "postfix_particle",
+      "simple_meaning": "perfect particle"
+    },
+    "nori": {
+      "spelling": "nori",
+      "type": "verb2",
+      "simple_meaning": "set free, liberate",
+      "formatted_meaning": "{0} sets {1} free"
+    },
+    "ki": {
+      "spelling": "ki",
+      "type": "verb2",
+      "simple_meaning": "is",
+      "formatted_meaning": "{0} is {1}"
+    },
+    "tuiri": {
+      "spelling": "tuiri",
+      "type": "adjective",
+      "simple_meaning": "strong"
+    },
+    "meina": {
+      "spelling": "meina",
+      "type": "adjective",
+      "simple_meaning": "brave"
+    },
+    "polini": {
+      "spelling": "polini",
+      "type": "verb2",
+      "simple_meaning": "overcome, conquer",
+      "formatted_meaning": "{0} overcomes {1}"
+    },
+    "leimina": {
+      "spelling": "leimina",
+      "type": "noun",
+      "simple_meaning": "tears"
+    },
+    "belime": {
+      "spelling": "belime",
+      "type": "noun",
+      "simple_meaning": "wind"
+    },
+    "rumi": {
+      "spelling": "rumi",
+      "type": "adjective",
+      "simple_meaning": "gentle"
+    },
+    "li": {
+      "spelling": "li",
+      "type": "postfix_particle",
+      "simple_meaning": "optative particle"
+    },
+    "revi": {
+      "spelling": "revi",
+      "type": "verb2",
+      "simple_meaning": "caress",
+      "formatted_meaning": "{0} caresses {1}"
+    },
+    "seliti": {
+      "spelling": "seliti",
+      "type": "noun",
+      "simple_meaning": "hair"
+    },
+    "boli": {
+      "spelling": "boli",
+      "type": "adjective",
+      "simple_meaning": "tired, weary"
+    },
+    "senai": {
+      "spelling": "senai",
+      "type": "verb1",
+      "simple_meaning": "rest",
+      "formatted_meaning": "{0} rests"
+    },
+    "lunata": {
+      "spelling": "lunata",
+      "type": "noun",
+      "simple_meaning": "star"
+    },
+    "bera": {
+      "spelling": "bera",
+      "type": "verb2",
+      "simple_meaning": "guide",
+      "formatted_meaning": "{0} guides {1} (to a destination)"
+    },
+    "be": {
+      "spelling": "be",
+      "type": "postfix_modifier",
+      "simple_meaning": "to, towards",
+      "modifiable_types": [
+        "verblike"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "norima": {
+      "spelling": "norima",
+      "type": "noun",
+      "simple_meaning": "dream world"
+    },
+    "ro": {
+      "spelling": "ro",
+      "type": "postfix_modifier",
+      "simple_meaning": "indicator that the modified noun appears at the position in the subclause, marked by \"ri\"",
+      "modifiable_types": [
+        "nounlike"
+      ],
+      "attachment_types": [
+        "sentence"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "mine": {
+      "spelling": "mine",
+      "type": "postfix_particle",
+      "simple_meaning": "can, may"
+    },
+    "rila": {
+      "spelling": "rila",
+      "type": "adjective",
+      "simple_meaning": "happy"
+    },
+    "so": {
+      "spelling": "so",
+      "type": "postfix_modifier",
+      "simple_meaning": "in, at (location)",
+      "modifiable_types": [
+        "any"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "voto": {
+      "spelling": "voto",
+      "type": "verb2",
+      "simple_meaning": "go to",
+      "formatted_meaning": "{0} goes to {1}"
+    },
+    "mivila": {
+      "spelling": "mivila",
+      "type": "noun",
+      "simple_meaning": "wheat"
+    },
+    "la": {
+      "spelling": "la",
+      "type": "prefix_modifier",
+      "simple_meaning": "made of",
+      "modifiable_types": [
+        "nounlike"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "musi": {
+      "spelling": "musi",
+      "type": "verb2",
+      "simple_meaning": "sit",
+      "formatted_meaning": "{0} sits at {1}"
+    },
+    "fide": {
+      "spelling": "fide",
+      "type": "noun",
+      "simple_meaning": "bottom, foot (of object)"
+    },
+    "ve": {
+      "spelling": "ve",
+      "type": "postfix_modifier",
+      "simple_meaning": "of (weak association)",
+      "modifiable_types": [
+        "nounlike"
+      ],
+      "attachment_types": [
+        "nounlike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "ri": {
+      "spelling": "ri",
+      "type": "noun",
+      "simple_meaning": "that which"
+    },
+    "rote": {
+      "spelling": "rote",
+      "type": "noun",
+      "simple_meaning": "field"
+    },
+    "pelora": {
+      "spelling": "pelora",
+      "type": "verb2",
+      "simple_meaning": "bask in the light of",
+      "formatted_meaning": "{0} basks in {1}"
+    },
+    "luna": {
+      "spelling": "luna",
+      "type": "noun",
+      "simple_meaning": "sun"
+    },
+    "beti": {
+      "spelling": "beti",
+      "type": "adjective",
+      "simple_meaning": "bright"
+    },
+    "de": {
+      "spelling": "de",
+      "type": "postfix_modifier",
+      "simple_meaning": "of (strong association)",
+      "modifiable_types": [
+        "nounlike"
+      ],
+      "attachment_types": [
+        "verblike"
+      ],
+      "attachment_notes": [
+        null
+      ]
+    },
+    "senui": {
+      "spelling": "senui",
+      "type": "noun",
+      "simple_meaning": "summer"
+    },
+    "lumei": {
+      "spelling": "lumei",
+      "type": "adjective",
+      "simple_meaning": "eternal"
+    },
+    "mui": {
+      "spelling": "mui",
+      "type": "prefix_particle",
+      "simple_meaning": "not, do not"
+    },
+    "leiri": {
+      "spelling": "leiri",
+      "type": "verb1",
+      "simple_meaning": "cry, weep",
+      "formatted_meaning": "{0} weeps"
+    },
+    "naro": {
+      "spelling": "naro",
+      "type": "postfix_modifier",
+      "simple_meaning": "any further, anymore",
+      "modifiable_types": [
+        "verblike"
+      ],
+      "attachment_types": [],
+      "attachment_notes": []
+    },
+    "lumite": {
+      "spelling": "lumite",
+      "type": "adjective",
+      "simple_meaning": "beautiful"
+    },
+    "lura": {
+      "spelling": "lura",
+      "type": "verb2",
+      "simple_meaning": "ruin, discolor",
+      "formatted_meaning": "{0} ruins {1}"
+    },
+    "suina": {
+      "spelling": "suina",
+      "type": "noun",
+      "simple_meaning": "smile"
+    },
+    "sevi": {
+      "spelling": "sevi",
+      "type": "adjective",
+      "simple_meaning": "at home"
+    },
+    "luvi": {
+      "spelling": "luvi",
+      "type": "adjective",
+      "simple_meaning": "safe"
+    },
+    "kola": {
+      "spelling": "kola",
+      "type": "verb2",
+      "simple_meaning": "tell about",
+      "formatted_meaning": "{0} tells about {1}"
+    },
+    "tuto": {
+      "spelling": "tuto",
+      "type": "noun",
+      "simple_meaning": "everyone"
+    },
+    "mani": {
+      "spelling": "mani",
+      "type": "postfix_modifier",
+      "simple_meaning": "now",
+      "modifiable_types": [
+        "verblike"
+      ],
+      "attachment_types": [],
+      "attachment_notes": []
+    },
+    "meili": {
+      "spelling": "meili",
+      "type": "noun",
+      "simple_meaning": "cradle (or any comfortable place to sleep)"
+    },
+    "kumei": {
+      "spelling": "kumei",
+      "type": "noun",
+      "simple_meaning": "lone, big tree"
+    },
+    "ne": {
+      "spelling": "ne",
+      "type": "prefix_particle",
+      "simple_meaning": "argument 1 marker"
     }
   }
 }

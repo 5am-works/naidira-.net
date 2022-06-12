@@ -5,18 +5,32 @@ include Naidira::Lexicon
 alias LModifier = Naidira::Lexicon::Modifier
 
 module Naidira::Parser
-  alias Constituent = Predicate | Argument | Modifier
+  alias Constituent = Predicate | Argument | Modifier | Particle
 
   class Predicate
     property base_word : Verb
     property mood : Mood?
+    property tense : Tense?
     property modifiers : Set(Modifier)
+    property negated : Bool
 
     def initialize(@base_word, @mood = nil, @modifiers = Set(Modifier).new)
+      @negated = false
     end
 
     def add_modifier(modifier : Modifier)
       modifiers << modifier
+    end
+
+    def negate!
+      puts "Negate #{self}"
+      raise "#{self} is already negated" if @negated
+      puts "#{self} is negated"
+      @negated = true
+    end
+
+    def valency
+      base_word.valency
     end
 
     def inspect(io)
@@ -29,6 +43,10 @@ module Naidira::Parser
       unless modifiers.empty?
         io << '<' << modifiers << '>'
       end
+    end
+
+    def to_s(io)
+      inspect io
     end
 
     def imperative?

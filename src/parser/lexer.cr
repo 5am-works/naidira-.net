@@ -6,9 +6,11 @@ module Naidira::Parser
     @constituents : Deque(Constituent)
     @reading_modifier : Modifier?
     @last_read_argument : Argument?
+    @waiting_particles : Deque(Particle)
 
     def initialize(@words : Array(String))
       @constituents = Deque(Constituent).new
+      @waiting_particles = Deque(Particle).new
     end
 
     def run
@@ -73,18 +75,7 @@ module Naidira::Parser
     end
 
     private def process(particle : Particle)
-      if particle.prefix?
-        raise "TODO: Process prefix particle #{particle.spelling}"
-      else
-        VERB_PARTICLES[particle.spelling]?.try do |v_particle|
-          predicate = @constituents.last? || raise "#{particle.spelling} needs a verb"
-          v_particle.call predicate.as(Predicate)
-          true
-        end || NOUN_PARTICLES[particle.spelling]?.try do |n_particle|
-          argument = @constituents.last? || raise "#{particle.spelling} needs a noun"
-          n_particle.call argument.as(Argument)
-        end || raise "Unrecognized particle: #{particle.spelling}"
-      end
+      @constituents << particle
       @last_read_argument = nil
     end
 

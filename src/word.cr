@@ -63,6 +63,10 @@ module Naidira::Lexicon
     def to_s(io)
       io << "#{spelling} (#{type}, word): #{simple_meaning}"
     end
+
+    def is?(word)
+      spelling == word
+    end
   end
 
   class Modifier < Word
@@ -132,16 +136,25 @@ module Naidira::Lexicon
     def initialize(@spelling, @type, @simple_meaning, @formatted_meaning)
     end
 
+    def valency
+      case type
+      when WordType::Verb0
+        0
+      when WordType::Verb1
+        1
+      when WordType::Verb2
+        2
+      else
+        raise "Unable to determine valency of #{self}"
+      end
+    end
+
     def has_kind?(word_kind : WordKind)
       word_kind == WordKind::Verblike
     end
 
     def pp
       "#{spelling} (#{type}, verb): #{simple_meaning}"
-    end
-
-    def valency
-      raise "TODO"
     end
   end
 

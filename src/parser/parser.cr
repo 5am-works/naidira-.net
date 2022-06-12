@@ -16,6 +16,8 @@ module Naidira::Parser
       @sentences = [] of Sentence
       @sentence = SentenceBuilder.new
       @waiting_modifiers = Deque(Modifier).new
+      @waiting_particles = Deque(Particle).new
+      @fix_next_argument = nil
       @reading_partial_sentence = nil
       @reading_modifier = nil
     end
@@ -51,6 +53,16 @@ module Naidira::Parser
     end
 
     private def parse(predicate : Predicate)
+      unless @waiting_particles.empty?
+        @waiting_particles.each do |particle|
+          VERB_PARTICLES[particle.spelling]?.try do |p|
+            p.call @sentence, predicate
+            true
+          end || raise "#{particle} cannot be attached to a verb (#{predicate})" 
+        end
+        @waiting_particles.clear
+      end
+
       unless @reading_partial_sentence.nil?
         ps = @reading_partial_sentence.not_nil!
         if ps.add_predicate predicate
@@ -81,7 +93,43 @@ module Naidira::Parser
     end
 
     private def parse(argument : Argument)
-      @sentence.add_argument argument
+      unless @waiting_particles.empty?
+        @waiting_particles.each do |particle|
+          NOUN_PARTICLES[particle.spelling]?.try do |p|
+            p.call @sentence, argument
+            true
+          end || raise "#{particle} needs a noun" 
+        end
+        @waiting_particles.clear
+      end
+
+      unless @waiting_modifiers.empty?
+        @waiting_modifiers.each do |modifier|
+          if modifier.can_modify? argument
+            argument.add_modifier modifier
+          else
+            raise "#{modifier} cannot modify #{argument}"
+          end
+        end
+        @waiting_modifiers.clear
+      end
+
+      unless @fix_next_argument.nil?
+        next_argument = @fix_next_argument.not_nil!
+        unless @sentence.fix_argument next_argument, argument
+          @sentences << @sentence.build
+          @sentence = SentenceBuilder.new
+          @sentence.fix_argument next_argument, argument
+        end 
+        @fix_next_argument = nil
+      else
+        unless @sentence.add_argument argument
+          @sentences << @sentence.build
+          @sentence = SentenceBuilder.new
+          @sentence.add_argument argument
+        end
+      end
+
       @last_read = argument
     end
 
@@ -94,6 +142,24 @@ module Naidira::Parser
       elsif modifier.modifies_verbs?
         predicate = @sentence.predicate || raise "#{modifier} needs a verb"
         predicate.add_modifier modifier
+      end
+    end
+
+    private def parse(particle : Particle)
+      if particle.is? "ne"
+        @fix_next_argument = 0
+      elsif particle.prefix?
+        @waiting_particles << particle
+      else
+        VERB_PARTICLES[particle.spelling]?.try do |v_particle|
+          predicate = @sentence.predicate || raise "#{particle.spelling} needs a verb"
+          v_particle.call @sentence, predicate.as(Predicate)
+          true
+        end || NOUN_PARTICLES[particle.spelling]?.try do |n_particle|
+          argument = @last_read.is_a?(Argument) ? @last_read.as Argument :
+            raise "#{particle.spelling} needs a noun"
+          n_particle.call @sentence, argument.as(Argument)
+        end || raise "Unrecognized particle: #{particle.spelling}"
       end
     end
 

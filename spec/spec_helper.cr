@@ -10,8 +10,9 @@ ATTRIBUTES = {
   :vi => Attribute::Personal
 }
 
-def v(verb_entry : String, *modifiers)
+def v(verb_entry : String, *modifiers, tense : Tense? = nil)
   p = Predicate.new(verb(verb_entry))
+  p.tense = tense
   modifiers.each do |m|
     p.add_modifier m
   end
@@ -55,7 +56,7 @@ def m(modifier : String, *attachments)
 end
 
 def s(predicate : Predicate, arguments : Array(Argument?) = Array(Argument?).new(2) { nil })
-  Sentence.new(predicate, arguments)
+  Sentence.new(predicate, arguments.map(&.as Argument?))
 end
 
 def verb(v : String)
