@@ -10,18 +10,22 @@ ATTRIBUTES = {
   :vi => Attribute::Personal
 }
 
-def v(verb_entry : String, *modifiers, mood : Mood? = nil, tense : Tense? = nil)
+def v(verb_entry : String, *modifiers, mood : Mood? = nil, tense : Tense? = nil, negated = false)
   p = Predicate.new(verb(verb_entry))
   p.mood = mood
   p.tense = tense
   modifiers.each do |m|
     p.add_modifier m
   end
+
+  if negated
+    p.negate!
+  end
   p
 end
 
-def v!(verb : String, *modifiers)
-  predicate = v verb, *modifiers
+def v!(verb : String, *args, **kwargs)
+  predicate = v verb, *args, **kwargs
   predicate.mood = Mood::Imperative
   predicate
 end
@@ -33,6 +37,10 @@ def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = 
   adjectives.each do |m|
     adjective = DICTIONARY.find(m).not_nil!.as(Noun)
     a.add_adjective adjective
+  end
+
+  m.each do |modifier|
+    a.add_modifier modifier
   end
 
   attr.each do |attribute|
@@ -48,9 +56,13 @@ def n(noun : String, *adjectives, si : Sentence? = nil, attr : Array(Symbol)? = 
   a
 end
 
-def m(modifier : String, *attachments : Attachment)
+def m(modifier : String)
   entry = (DICTIONARY.find(modifier) || raise "Modifier not found: #{modifier}").as(LModifier)
-  modifier = Modifier.new entry
+  Modifier.new entry
+end
+
+def m(modifier : String, *attachments : Attachment)
+  modifier = m modifier
   attachments.each do |a|
     modifier.add_attachment(a)
   end

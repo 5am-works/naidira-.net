@@ -23,9 +23,7 @@ module Naidira::Parser
     end
 
     def negate!
-      puts "Negate #{self}"
       raise "#{self} is already negated" if @negated
-      puts "#{self} is negated"
       @negated = true
     end
 
@@ -96,6 +94,10 @@ module Naidira::Parser
         io << modifiers
         io << ">"
       end
+    end
+
+    def to_s(io)
+      inspect io
     end
 
     def ==(other : Argument)

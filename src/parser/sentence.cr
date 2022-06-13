@@ -78,6 +78,8 @@ module Naidira::Parser
         arguments[1] = arguments[0]
         arguments[0] = nil
         @next_argument = 2
+      elsif no_arguments?
+        @next_argument = 1
       end
     end
 

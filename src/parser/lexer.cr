@@ -33,27 +33,16 @@ module Naidira::Parser
 
       argument = Argument.new noun
 
-      if waiting_for_argument?
-        add_to_modifier argument
-      else
-        @constituents << argument
-      end
+      
+      @constituents << argument
       @last_read_argument = argument
     end
 
     private def process(verb : Verb)
       predicate = Predicate.new verb
 
-      unless @reading_modifier.nil?
-        if waiting_for_predicate?
-          add_to_modifier predicate
-        else
-          raise "Read #{verb}, but it is not compatible with #{@reading_modifier}"
-        end
-      else
-        @constituents << predicate
-        @last_read_argument = nil
-      end
+      @constituents << predicate
+      @last_read_argument = nil
     end
 
     private def process(lmodifier : LModifier)
@@ -66,8 +55,6 @@ module Naidira::Parser
 
         modifier.add_attachment last_argument
         @constituents << modifier
-      elsif lmodifier.has_attachments? && !lmodifier.sentence_attachment?
-        @reading_modifier = modifier
       else
         @constituents << modifier
       end
@@ -81,23 +68,6 @@ module Naidira::Parser
 
     private def process(word)
       raise "TODO: Process #{word.spelling}"
-    end
-
-    private def waiting_for_argument?
-      @reading_modifier.try(&.waiting_for? WordKind::Nounlike)
-    end
-
-    private def waiting_for_predicate?
-      @reading_modifier.try(&.waiting_for? WordKind::Verblike)
-    end
-
-    private def add_to_modifier(attachment)
-      modifier = @reading_modifier.not_nil!
-      modifier.add_attachment attachment
-      if modifier.complete?
-        @constituents << modifier
-        @reading_modifier = nil
-      end
     end
   end
 

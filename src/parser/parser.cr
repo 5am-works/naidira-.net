@@ -75,15 +75,19 @@ module Naidira::Parser
         @waiting_modifiers.clear
       end
 
-      unless @sentence.add_predicate predicate
-        @sentences << @sentence.build
-        if @read_single_sentence
-          return false
-        else
-          @sentence = SentenceBuilder.new
+      if waiting_for_predicate?
+        add_to_modifier predicate
+      else
+        unless @sentence.add_predicate predicate
+          @sentences << @sentence.build
+          if @read_single_sentence
+            return false
+          else
+            @sentence = SentenceBuilder.new
+          end
         end
+        @sentence.add_predicate predicate
       end
-      @sentence.add_predicate predicate
       @last_read = predicate
       true
     end
@@ -110,26 +114,30 @@ module Naidira::Parser
         @waiting_modifiers.clear
       end
 
-      unless @fix_next_argument.nil?
-        next_argument = @fix_next_argument.not_nil!
-        unless @sentence.fix_argument next_argument, argument
-          @sentences << @sentence.build
-          if @read_single_sentence
-            return false
-          else
-            @sentence = SentenceBuilder.new
-            @sentence.fix_argument next_argument, argument
-          end
-        end 
-        @fix_next_argument = nil
+      if waiting_for_argument?
+        add_to_modifier argument
       else
-        unless @sentence.add_argument argument
-          @sentences << @sentence.build
-          if @read_single_sentence
-            return false
-          else
-            @sentence = SentenceBuilder.new
-            @sentence.add_argument argument
+        unless @fix_next_argument.nil?
+          next_argument = @fix_next_argument.not_nil!
+          unless @sentence.fix_argument next_argument, argument
+            @sentences << @sentence.build
+            if @read_single_sentence
+              return false
+            else
+              @sentence = SentenceBuilder.new
+              @sentence.fix_argument next_argument, argument
+            end
+          end 
+          @fix_next_argument = nil
+        else
+          unless @sentence.add_argument argument
+            @sentences << @sentence.build
+            if @read_single_sentence
+              return false
+            else
+              @sentence = SentenceBuilder.new
+              @sentence.add_argument argument
+            end
           end
         end
       end
@@ -147,12 +155,19 @@ module Naidira::Parser
       elsif modifier.is? "ro"
         subclause = read_subclause(ri: true)
         modifier.add_attachment subclause
+        argument = @last_read.as? Argument || raise "#{modifier} needs a noun"
+        argument.add_modifier modifier
       elsif modifier.modifies_verbs?
         predicate = @last_read.as? Predicate || @sentence.predicate ||
           raise "#{modifier} needs a verb"
         predicate.add_modifier modifier
       else
-        raise "TODO: Process #{modifier}"
+        argument = @last_read.as? Argument || raise "#{modifier} needs a noun"
+        argument.add_modifier modifier
+      end
+
+      unless modifier.complete?
+        @reading_modifier = modifier
       end
       true
     end
@@ -180,6 +195,22 @@ module Naidira::Parser
       subclause, remaining_words = subparser.parse_one_sentence(*args, **kwargs)
       @words = remaining_words
       subclause
+    end
+
+    private def waiting_for_argument?
+      @reading_modifier.try(&.waiting_for? WordKind::Nounlike)
+    end
+
+    private def waiting_for_predicate?
+      @reading_modifier.try(&.waiting_for? WordKind::Verblike)
+    end
+
+    private def add_to_modifier(attachment)
+      modifier = @reading_modifier.not_nil!
+      modifier.add_attachment attachment
+      if modifier.complete?
+        @reading_modifier = nil
+      end
     end
   end
 
