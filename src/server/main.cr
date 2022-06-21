@@ -1,19 +1,16 @@
 require "amber"
-require "./naidira"
+require "./controller"
 
 include Amber
-
-class ApiController < Amber::Controller::Base
-  def index
-    response.status_code = 501
-  end
-end
+include Naidira::Server
 
 Server.configure do |app|
   pipeline :api
 
   routes :api do
     get "/", ApiController, :index
+
+    get "/search/:query", ApiController, :search
   end
 end
 

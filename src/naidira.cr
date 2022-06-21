@@ -1,4 +1,5 @@
 require "./word"
+require "./dictionary"
 require "./parser/lexer"
 require "./parser/parser"
 

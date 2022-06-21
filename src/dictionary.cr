@@ -22,8 +22,14 @@ module Naidira::Lexicon
       Dictionary.from_json(input_file)
     end
 
-    def find(word)
+    def find(word : String)
       words[word]?
+    end
+
+    def search(query : String)
+      words.each_value.select do |word|
+        word.spelling.includes?(query) || word.simple_meaning.includes?(query)
+      end
     end
 
     def add(word)
