@@ -5,7 +5,9 @@ include Amber
 include Naidira::Server
 
 Server.configure do |app|
-  pipeline :api
+  pipeline :api do
+    plug Pipe::CORS.new
+  end
 
   routes :api do
     get "/", ApiController, :index
