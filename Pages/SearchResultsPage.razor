@@ -6,7 +6,10 @@
 @if (Results is null) {
     <p>Loading results</p>
 } else {
-    <p>Total results: @(Results?.WordResults?.Count)</p>
+    <p>Total results: @(Results?.WordResults.Count)</p>
+    @foreach (var result in Results!.WordResults) {
+        <SearchResult WordResult="result"/>
+    }
 }
 
 @code {
@@ -17,6 +20,8 @@
     private SearchResults? Results { get; set; }
 
     protected override async Task OnParametersSetAsync() {
+        Results = null;
+        StateHasChanged();
         Results = await HttpClient.GetFromJsonAsync<SearchResults>($"/search/{Query}");
     }
 

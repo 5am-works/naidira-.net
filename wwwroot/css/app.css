@@ -45,7 +45,7 @@
 
 .kanvaso {
   position: relative;
-  top: 5px;
+  vertical-align: bottom;
 }
 
 .bliss {
@@ -78,6 +78,10 @@
 }
 .gloso-tabelo th, .gloso-tabelo td {
   padding: 4px;
+}
+
+.meaning {
+  margin-top: 0;
 }
 
 h2.vorto {
