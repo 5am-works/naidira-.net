@@ -15,7 +15,13 @@ module Naidira::Server
         WordResult.new(word.spelling, word.type, word.simple_meaning)
       end
 
+      context.response.content_type = "application/json"
       SearchResults.new(results.to_a).to_json
+    end
+
+    def alphabetical
+      context.response.content_type = "application/json"
+      DICTIONARY.alphabetical.to_json
     end
   end
 

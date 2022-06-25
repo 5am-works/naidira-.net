@@ -32,6 +32,12 @@ module Naidira::Lexicon
       end
     end
 
+    def alphabetical
+      words.values.sort do |a, b|
+        a.spelling <=> b.spelling
+      end
+    end
+
     def add(word)
       words[word.spelling] = word
     end

@@ -11,8 +11,8 @@ Server.configure do |app|
 
   routes :api do
     get "/", ApiController, :index
-
     get "/search/:query", ApiController, :search
+    get "/alphabetical", ApiController, :alphabetical
   end
 end
 
