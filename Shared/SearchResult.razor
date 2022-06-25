@@ -1,13 +1,17 @@
 ﻿@using NaidiraClient.Data
 
 <div>
-    <span class="rezulto-vorto">@WordResult.Spelling</span>
-    <Okena Height="38" Text="@WordResult.Spelling"></Okena>
+    <span class="rezulto-vorto">@Spelling</span>
+    <Okena Height="38" Text="@Spelling"/>
 </div>
-<p class="meaning">@WordResult.Meaning</p>
+<p class="meaning">@Meaning</p>
 
 @code {
 
     [Parameter, EditorRequired]
-    public WordResult WordResult { get; set; } = null!;
+    public string Spelling { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public string Meaning { get; set; } = null!;
+
 }

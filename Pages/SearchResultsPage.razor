@@ -8,7 +8,8 @@
 } else {
     <p>Total results: @(Results?.WordResults.Count)</p>
     @foreach (var result in Results!.WordResults) {
-        <SearchResult WordResult="result"/>
+        <SearchResult Spelling="@result.Spelling"
+                      Meaning="@result.Spelling"/>
     }
 }
 
