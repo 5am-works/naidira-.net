@@ -9,6 +9,7 @@ loop do
     puts "Enter an option:
 1. Search for words
 2. Add a word
+3. Backfill first appearances
 0. Quit
 "
 
@@ -18,6 +19,8 @@ loop do
       search dictionary
     when 2
       add dictionary
+    when 3
+      backfill dictionary
     when 0
       dictionary.save
       break
@@ -32,7 +35,7 @@ end
 def search(dictionary)
   print "Enter a word: "
   input = gets.try &.chomp
-  result = dictionary.find(input)
+  result = dictionary.find(input.not_nil!)
   if result.nil?
     puts "Word not found"
   else
@@ -93,6 +96,27 @@ def add(dictionary)
     elsif input == "n"
       break
     end
+  end
+end
+
+def backfill(dictionary)
+  existing_entries = dictionary.sources
+  dictionary.each do |word|
+    puts "Enter the source for #{word}"
+    existing_entries.each_with_index do |source, index|
+      puts "#{index}. #{source}"
+    end
+    input = gets.not_nil!.chomp
+    existing = input.to_i?
+    selected = if existing.nil?
+      existing_entries << input
+      input
+    elsif input.empty?
+      nil
+    else
+      existing_entries[existing]
+    end
+    word.first_appearance = selected
   end
 end
 

@@ -32,6 +32,18 @@ module Naidira::Lexicon
       end
     end
 
+    def sources
+      words.values.map do |word|
+        word.first_appearance
+      end.reject(&.nil?).uniq.to_a
+    end
+
+    def each
+      words.values.each do |word|
+        yield word
+      end
+    end
+
     def alphabetical
       words.values.sort do |a, b|
         a.spelling <=> b.spelling

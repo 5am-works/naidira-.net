@@ -48,6 +48,7 @@ module Naidira::Lexicon
     property spelling : String
     property type : WordType
     property simple_meaning : String
+    property first_appearance : String?
 
     def initialize(@spelling, @type, @simple_meaning)
     end
