@@ -124,6 +124,29 @@ h2.vorto {
   border-bottom: #343a40 solid 1px;
 }
 
+.toc {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 200px;
+  padding-left: 5px;
+}
+.toc .toc-entry, .toc h3 {
+  display: block;
+  padding: 10px 4px;
+}
+.toc p {
+  margin: 0;
+}
+.toc .wip {
+  opacity: 0.5;
+}
+
+.book-page {
+  margin-left: 200px;
+}
+
 html {
   background-color: #0b173b;
   color: #e0e6f8;
