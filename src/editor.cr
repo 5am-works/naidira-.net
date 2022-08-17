@@ -2,7 +2,7 @@ require "./dictionary"
 
 include Naidira::Lexicon
 
-dictionary = Dictionary.load
+dictionary = Dictionary.load_yaml
 
 loop do
   begin
@@ -22,7 +22,7 @@ loop do
     when 3
       backfill dictionary
     when 0
-      dictionary.save
+      dictionary.save_yaml
       break
     else
       puts "Invalid selection"

@@ -1,5 +1,4 @@
-require "json"
-include JSON
+require "yaml"
 
 module Naidira::Lexicon
   enum WordType
@@ -31,8 +30,9 @@ module Naidira::Lexicon
   end
 
   class Word
-    include JSON::Serializable
-    use_json_discriminator "type", {
+    include YAML::Serializable
+
+    use_yaml_discriminator "type", {
       noun:             Noun,
       adjective:        Noun,
       verb0:            Verb,
@@ -71,7 +71,7 @@ module Naidira::Lexicon
   end
 
   class Modifier < Word
-    include JSON::Serializable
+    include YAML::Serializable
     property modifiable_types : Set(WordKind)
     property attachment_types : Array(WordKind)
     property attachment_notes : Array(String | Nil)
@@ -131,7 +131,7 @@ module Naidira::Lexicon
   end
 
   class Verb < Word
-    include JSON::Serializable
+    include YAML::Serializable
     property formatted_meaning : String
 
     def initialize(@spelling, @type, @simple_meaning, @formatted_meaning)
