@@ -2,7 +2,7 @@ require "../Dictionary"
 require "../word"
 require "./constituent"
 
-DICTIONARY = Dictionary.load
+DICTIONARY = Dictionary.load_yaml
 
 module Naidira::Parser
   struct Sentence

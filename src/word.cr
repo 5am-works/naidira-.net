@@ -1,3 +1,4 @@
+require "json"
 require "yaml"
 
 module Naidira::Lexicon
@@ -30,6 +31,7 @@ module Naidira::Lexicon
   end
 
   class Word
+    include JSON::Serializable
     include YAML::Serializable
 
     use_yaml_discriminator "type", {
