@@ -6,3 +6,13 @@
 naidira
 editor
 parse
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+node_modules/
+.pnpm-debug.log
+wwwroot/css/app.css
+wwwroot/css/app.css.map
+wwwroot/Okena.js

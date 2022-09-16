@@ -1,0 +1,23 @@
+﻿<div class="toc">
+    <h3>Table of Contents</h3>
+    @foreach (var (entry, ready) in Entries) {
+        if (ready) {
+            <a class="toc-entry" href="@($"/book/{entry.ToLower().Replace(' ', '_')}")">@entry</a>
+        } else {
+            <p class="toc-entry wip">@entry</p>
+        }
+    }
+</div>
+
+@code {
+
+    private static List<(string, bool)> Entries = new() {
+        ("Phonology", true),
+        ("Orthography", true),
+        ("Word Types", true),
+        ("Nouns", false),
+        ("Verbs", false),
+        ("Modifiers", false),
+    };
+
+}

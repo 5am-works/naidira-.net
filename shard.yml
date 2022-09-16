@@ -6,7 +6,7 @@ authors:
 
 targets:
   naidira:
-    main: src/naidira.cr
+    main: src/server/main.cr
 
 crystal: 1.4.1
 

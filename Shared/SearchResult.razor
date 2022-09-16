@@ -1,0 +1,17 @@
+﻿@using NaidiraClient.Data
+
+<div>
+    <span class="rezulto-vorto">@Spelling</span>
+    <Okena Height="38" Text="@Spelling"/>
+</div>
+<p class="meaning">@Meaning</p>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public string Spelling { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public string Meaning { get; set; } = null!;
+
+}
