@@ -1,5 +1,8 @@
 ﻿module Naidira.Lexicon.Lexicon
 
+open System.Collections.Generic
+open System.Linq
+
 type WordType =
    | Unknown
    | Noun
@@ -73,7 +76,19 @@ type Lexicon() =
    member val PostfixModifiers: PostfixModifier[] = Array.empty with get, set
    member val PrefixParticles: PrefixModifier[] = Array.empty with get, set
    member val PostfixParticles: PrefixModifier[] = Array.empty with get, set
+   member private this.Index =
+      Seq.cast this.Nouns
+      |> Seq.append (Seq.cast this.Verbs)
+      |> Seq.append (Seq.cast this.Adjectives)
+      |> Seq.append (Seq.cast this.PostfixModifiers)
+      |> Seq.append (Seq.cast this.PrefixModifiers)
+      |> Seq.append (Seq.cast this.PostfixParticles)
+      |> Seq.append (Seq.cast this.PrefixParticles)
+      |> Seq.map (fun (word: Word) -> word.Spelling, word)
+      |> Map.ofSeq
    
    member this.WordCount with get() =
       this.Nouns.Length + this.Adjectives.Length + this.Verbs.Length + this.PrefixModifiers.Length +
          this.PostfixModifiers.Length + this.PrefixParticles.Length + this.PostfixParticles.Length
+         
+   member this.Lookup (word: string): Word option = Map.tryFind word this.Index

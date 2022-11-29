@@ -6,9 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Utils.fs" />
         <Compile Include="Lexicon.fs" />
         <Compile Include="LexiconLoader.fs" />
         <EmbeddedResource Include="dictionary.yaml" />
+        <Compile Include="Lexer.fs" />
     </ItemGroup>
 
     <ItemGroup>
