@@ -1,7 +1,7 @@
 ﻿module Naidira.Lexicon.Lexicon
 
-open System.Collections.Generic
-open System.Linq
+open System
+
 
 type WordType =
    | Unknown
@@ -28,6 +28,12 @@ type Word() =
    member val FirstAppearance: string option = None with get, set
    abstract WordType: WordType with get
    
+   interface IComparable with
+      member this.CompareTo(other) =
+         match other with
+         | :? Word as word -> this.Spelling.CompareTo(word.Spelling)
+         | _ -> failwithf $"Cannot compare with %s{other.ToString()}"
+
 type Noun() =
    inherit Word()
    override this.WordType = WordType.Noun
@@ -45,27 +51,32 @@ type Verb() =
       | 0 -> Verb0
       | 1 -> Verb1
       | _ -> Verb2
-      
-type PrefixModifier() =
+
+[<AbstractClass>]
+type Modifier() =
    inherit Word()
    member val ModifiableTypes: WordKind[] = Array.empty with get, set
    member val AttachmentTypes: WordKind[] = Array.empty with get, set
    member val AttachmentNotes: string option[] = Array.empty with get, set
+      
+type PrefixModifier() =
+   inherit Modifier()
    override this.WordType = WordType.PrefixModifier
    
 type PostfixModifier() =
-   inherit Word()
-   member val ModifiableTypes: WordKind[] = Array.empty with get, set
-   member val AttachmentTypes: WordKind[] = Array.empty with get, set
-   member val AttachmentNotes: string option[] = Array.empty with get, set
+   inherit Modifier()
    override this.WordType = WordType.PostfixModifier
 
-type PrefixParticle() =
+[<AbstractClass>]
+type Particle() =
    inherit Word()
+
+type PrefixParticle() =
+   inherit Particle()
    override this.WordType = WordType.PrefixParticle
 
 type PostfixParticle() =
-   inherit Word()
+   inherit Particle()
    override this.WordType = WordType.PostfixParticle
 
 type Lexicon() =
@@ -75,7 +86,7 @@ type Lexicon() =
    member val PrefixModifiers: PrefixModifier[] = Array.empty with get, set
    member val PostfixModifiers: PostfixModifier[] = Array.empty with get, set
    member val PrefixParticles: PrefixModifier[] = Array.empty with get, set
-   member val PostfixParticles: PrefixModifier[] = Array.empty with get, set
+   member val PostfixParticles: PostfixModifier[] = Array.empty with get, set
    member private this.Index =
       Seq.cast this.Nouns
       |> Seq.append (Seq.cast this.Verbs)
