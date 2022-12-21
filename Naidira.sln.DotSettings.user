@@ -1,16 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=43d09096_002D9e41_002D46f8_002Da344_002Da8cc4d07f549/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="LexiconTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::013B042E-9173-44CF-83E7-B0B21D35E9A4::net7.0::Naidira.Lexicon.Tests+LexiconTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4da9127b_002D302f_002D4196_002Da99d_002D4e4121bd1982/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="LexiconTests #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::013B042E-9173-44CF-83E7-B0B21D35E9A4::net7.0::Naidira.Lexicon.Tests+LexiconTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9963b5b7_002D43c6_002D4171_002Db6ca_002Dba40eed75b52/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="LexiconTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::013B042E-9173-44CF-83E7-B0B21D35E9A4::net7.0::Naidira.Lexicon.Tests+LexiconTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=48a313b3_002D9af3_002D4a6a_002Dbe00_002Dc6ccd68b7177/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
