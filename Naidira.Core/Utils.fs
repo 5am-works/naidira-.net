@@ -10,3 +10,8 @@ let foldResult f state (items: seq<'a>) =
       else
          Ok state
    fold state
+
+let altResult result2Thunk result1 =
+   match result1 with
+   | Ok r -> Ok r
+   | Error error -> result2Thunk error
