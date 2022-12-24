@@ -1,8 +1,8 @@
-﻿module Naidira.Lexicon.Tests.LexerTests
+﻿module Naidira.Core.Tests.LexerTests
 
 open NUnit.Framework
-open Naidira.Lexicon
-open Naidira.Lexicon.Lexicon
+open Naidira.Core
+open Naidira.Core.Lexicon
 
 open TestUtils
 

@@ -1,4 +1,4 @@
-﻿module Naidira.Lexicon.Lexicon
+﻿module Naidira.Core.Lexicon
 
 open System
 

@@ -5,6 +5,7 @@
 
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
+        <RootNamespace>Naidira.Lexicon.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Naidira.Lexicon\Naidira.Lexicon.fsproj" />
+      <ProjectReference Include="..\Naidira.Core\Naidira.Core.fsproj" />
     </ItemGroup>
 
 </Project>

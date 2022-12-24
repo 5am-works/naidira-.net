@@ -1,9 +1,9 @@
-﻿module Naidira.Lexicon.LexiconLoader
+﻿module Naidira.Core.LexiconLoader
 
 open System
 open System.IO
 open System.Reflection
-open Naidira.Lexicon.Lexicon
+open Naidira.Core.Lexicon
 open YamlDotNet.Core
 open YamlDotNet.Core.Events
 open YamlDotNet.Serialization

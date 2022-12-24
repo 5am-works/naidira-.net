@@ -1,4 +1,4 @@
-﻿module Naidira.Lexicon.Utils
+﻿module Naidira.Core.Utils
 
 let foldResult f state (items: seq<'a>) =
    let enumerator = items.GetEnumerator()

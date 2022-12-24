@@ -1,9 +1,9 @@
-﻿module Naidira.Lexicon.Lexer
+﻿module Naidira.Core.Lexer
 
 open System.Collections.Generic
 open System.Text.RegularExpressions
-open Naidira.Lexicon.Lexicon
-open Naidira.Lexicon.Utils
+open Naidira.Core.Lexicon
+open Naidira.Core.Utils
 
 type LModifier = Modifier
 

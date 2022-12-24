@@ -1,8 +1,8 @@
-module Naidira.Lexicon.Tests.LexiconTests
+module Naidira.Core.Tests.LexiconTests
 
 open NUnit.Framework
-open Naidira.Lexicon
-open Naidira.Lexicon.Lexicon
+open Naidira.Core
+open Naidira.Core.Lexicon
 
 [<TestFixture>]
 type LexiconTests() =

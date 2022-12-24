@@ -1,8 +1,8 @@
-﻿module Naidira.Lexicon.Tests.TestUtils
+﻿module Naidira.Core.Tests.TestUtils
 
-open Naidira.Lexicon
-open Naidira.Lexicon.Lexer
-open Naidira.Lexicon.Lexicon
+open Naidira.Core
+open Naidira.Core.Lexer
+open Naidira.Core.Lexicon
 
 let private lexicon = LexiconLoader.lexiconInstance.Value
 

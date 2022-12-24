@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.Lexicon", "Naidira.Lexicon\Naidira.Lexicon.fsproj", "{B288FF4E-F92D-48B6-90FF-B6A2A0C48681}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.Core", "Naidira.Core\Naidira.Core.fsproj", "{B288FF4E-F92D-48B6-90FF-B6A2A0C48681}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.Lexicon.Tests", "Naidira.Lexicon.Tests\Naidira.Lexicon.Tests.fsproj", "{013B042E-9173-44CF-83E7-B0B21D35E9A4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.Core.Tests", "Naidira.Core.Tests\Naidira.Core.Tests.fsproj", "{013B042E-9173-44CF-83E7-B0B21D35E9A4}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.WordGenerator", "Naidira.WordGenerator\Naidira.WordGenerator.fsproj", "{FA4D1F0D-8856-481E-8A5D-4FF787EE5F6C}"
 EndProject
