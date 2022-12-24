@@ -36,11 +36,8 @@ type Word() =
 
 type Noun() =
    inherit Word()
+   member val SentenceInitial = false with get, set
    override this.WordType = WordType.Noun
-   
-type Adjective() =
-   inherit Word()
-   override this.WordType = WordType.Adjective
    
 type Verb() =
    inherit Word()
@@ -81,12 +78,12 @@ type PostfixParticle() =
 
 type Lexicon() =
    member val Nouns: Noun[] = Array.empty with get, set
-   member val Adjectives: Adjective[] = Array.empty with get, set
+   member val Adjectives: Noun[] = Array.empty with get, set
    member val Verbs: Verb[] = Array.empty with get, set
    member val PrefixModifiers: PrefixModifier[] = Array.empty with get, set
    member val PostfixModifiers: PostfixModifier[] = Array.empty with get, set
-   member val PrefixParticles: PrefixModifier[] = Array.empty with get, set
-   member val PostfixParticles: PostfixModifier[] = Array.empty with get, set
+   member val PrefixParticles: PrefixParticle[] = Array.empty with get, set
+   member val PostfixParticles: PostfixParticle[] = Array.empty with get, set
    member private this.Index =
       Seq.cast this.Nouns
       |> Seq.append (Seq.cast this.Verbs)
@@ -103,3 +100,5 @@ type Lexicon() =
          this.PostfixModifiers.Length + this.PrefixParticles.Length + this.PostfixParticles.Length
          
    member this.Lookup (word: string): Word option = Map.tryFind word this.Index
+   
+   member this.Get (word: string) = Map.find word this.Index

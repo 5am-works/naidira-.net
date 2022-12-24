@@ -34,7 +34,7 @@ and Predicate =
 
 and Modifier =
    { BaseWord : LModifier
-     Attachments : Attachment array }
+     Attachments : Attachment list }
    
 and Attachment =
    | ArgumentAttachment of Argument
@@ -58,11 +58,12 @@ and PredicateBuilder =
 
 and ModifierBuilder =
    { BaseWord : LModifier
-     Attachments : Attachment array }
+     Attachments : LinkedList<Attachment> }
    
 type ConstituentBuilder =
    | Argument of ArgumentBuilder
    | Predicate of PredicateBuilder
+   | Particle of Particle
 
 type LexerState =
    { Constituents : LinkedList<ConstituentBuilder>
@@ -92,6 +93,11 @@ let private processVerb (verb: Verb) lexerState =
    lexerState.Constituents.AddLast(Predicate predicate) |> ignore
    lexerState.LastReadArgument <- None
    Ok lexerState
+   
+let private processParticle (particle: Particle) lexerState =
+   lexerState.Constituents.AddLast(Particle particle) |> ignore
+   lexerState.LastReadArgument <- None
+   Ok lexerState
 
 let private processWord (lexicon: Lexicon) lexerState word =
    match lexicon.Lookup(word) with
@@ -99,10 +105,38 @@ let private processWord (lexicon: Lexicon) lexerState word =
       match lemma with
       | :? Noun as noun -> processNoun noun lexerState
       | :? Verb as verb -> processVerb verb lexerState
+      | :? Particle as particle -> processParticle particle lexerState
       | _ -> failwith $"TODO: process {lemma.Spelling}"
    | None -> Error $"Word not found: {word}"
+   
+let buildModifier (mb: ModifierBuilder): Modifier =
+   { BaseWord = mb.BaseWord
+     Attachments = List.ofSeq mb.Attachments }
+   
+let buildArgument (ab: ArgumentBuilder): Argument =
+   { BaseWords = Set.ofSeq ab.BaseWords
+     Modifiers = Set.ofSeq (Seq.map buildModifier ab.Modifiers)
+     Attributes = Set.ofSeq ab.Attributes }
+   
+let buildPredicate (pb: PredicateBuilder): Predicate =
+   { BaseWord = pb.BaseWord
+     Mood = Indicative
+     Tense = Incomplete
+     Modifiers = Set.empty
+     Negated = false }
 
-let toLexerResult lexerState = failwith "TODO"
+let toLexerResult (lexerState: LexerState): Result<LexerResult, string> =
+   if lexerState.WaitingParticles.Count > 0 then
+      Error $"Unused modifiers: {lexerState.WaitingParticles}"
+   else
+      lexerState.Constituents
+      |> Seq.map (fun cb ->
+         match cb with
+         | Argument argument -> ArgumentConstituent (buildArgument argument)
+         | Predicate predicate -> PredicateConstituent (buildPredicate predicate)
+         | Particle particle -> ParticleConstituent particle)
+      |> List.ofSeq
+      |> Ok
 
 let lexicalize (lexicon: Lexicon) (input: string) =
    let words = whitespaceRegex.Split(input)
@@ -112,4 +146,4 @@ let lexicalize (lexicon: Lexicon) (input: string) =
         LastReadArgument = None
         WaitingParticles = LinkedList() }
    foldResult (processWord lexicon) state words
-   |> Result.map toLexerResult
+   |> Result.bind toLexerResult

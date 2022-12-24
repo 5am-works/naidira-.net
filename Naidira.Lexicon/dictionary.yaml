@@ -93,6 +93,10 @@ nouns:
 - spelling: kumei
   simple_meaning: lone, big tree
   first_appearance: Silika's Sleepsong
+- spelling: vile
+  sentence_initial: true
+  simple_meaning: you (sentence-initial form)
+  first_appearance: Silika's Sleepsong
 adjectives:
 - spelling: bova
   simple_meaning: dense, opaque

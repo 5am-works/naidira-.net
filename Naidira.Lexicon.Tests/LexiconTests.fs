@@ -1,6 +1,7 @@
-module Naidira.Lexicon.Tests
+module Naidira.Lexicon.Tests.LexiconTests
 
 open NUnit.Framework
+open Naidira.Lexicon
 open Naidira.Lexicon.Lexicon
 
 [<TestFixture>]
