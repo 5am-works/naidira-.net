@@ -1,0 +1,24 @@
+﻿@page "/wordlist"
+@using NaidiraClient.Data
+@inject HttpClient HttpClient
+
+@if (Words == null) {
+    <p>Loading</p>
+} else {
+    foreach (var word in Words) {
+        <SearchResult
+            Spelling="@word.Spelling"
+            Meaning="@word.SimpleMeaning"/>
+    }
+}
+
+@code {
+    private List<Word>? Words { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            Words = await HttpClient.GetFromJsonAsync<List<Word>>("/api/alphabetical");
+            StateHasChanged();
+        }
+    }
+}

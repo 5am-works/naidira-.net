@@ -1,0 +1,29 @@
+﻿@page "/search/{query}"
+@using NaidiraClient.Data
+@inject HttpClient HttpClient
+
+<p>Search results for @Query:</p>
+@if (Results is null) {
+    <p>Loading results</p>
+} else {
+    <p>Total results: @(Results?.WordResults.Count)</p>
+    @foreach (var result in Results!.WordResults) {
+        <SearchResult Spelling="@result.Spelling"
+                      Meaning="@result.Spelling"/>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public string Query { get; set; } = null!;
+
+    private SearchResults? Results { get; set; }
+
+    protected override async Task OnParametersSetAsync() {
+        Results = null;
+        StateHasChanged();
+        Results = await HttpClient.GetFromJsonAsync<SearchResults>($"/api/search/{Query}");
+    }
+
+}
