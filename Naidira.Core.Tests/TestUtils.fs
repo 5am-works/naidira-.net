@@ -14,10 +14,15 @@ let pr (word: string): Constituent =
      Modifiers = Set.empty
      Negated = false }
    |> PredicateConstituent
-
-let pa (word: string): Constituent =
-   lexicon.Get word :?> Particle
-   |> ParticleConstituent
+   
+let pri (word: string): Constituent =
+   let baseWord = lexicon.Get word :?> Verb
+   { BaseWord = baseWord
+     Mood = Imperative
+     Tense = Incomplete
+     Modifiers = Set.empty
+     Negated = false }
+   |> PredicateConstituent
   
 let ar (word: string): Constituent =
    let baseWord = lexicon.Get word :?> Noun

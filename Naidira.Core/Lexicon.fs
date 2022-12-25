@@ -15,6 +15,11 @@ type WordType =
    | PrefixParticle
    | PostfixParticle
    
+type ParticleType =
+   | NounParticle
+   | VerbParticle
+   | SentenceParticle
+   
 type WordKind =
    | Nounlike
    | Verblike
@@ -33,6 +38,8 @@ type Word() =
          match other with
          | :? Word as word -> this.Spelling.CompareTo(word.Spelling)
          | _ -> failwithf $"Cannot compare with %s{other.ToString()}"
+   
+   override this.ToString() = this.Spelling
 
 type Noun() =
    inherit Word()
@@ -67,6 +74,7 @@ type PostfixModifier() =
 [<AbstractClass>]
 type Particle() =
    inherit Word()
+   member val ParticleType: ParticleType = NounParticle with get, set
 
 type PrefixParticle() =
    inherit Particle()

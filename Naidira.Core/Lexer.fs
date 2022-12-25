@@ -51,9 +51,7 @@ type ArgumentBuilder =
      Modifiers: HashSet<ModifierBuilder>
      Attributes: HashSet<WordAttribute> }
 
-and PredicateBuilder =
-   { BaseWord: Verb
-     mutable Mood: Mood }
+and PredicateBuilder = { BaseWord: Verb; mutable Mood: Mood }
 
 and ModifierBuilder =
    { BaseWord: LModifier
@@ -72,11 +70,13 @@ type LexerState =
 
 let private whitespaceRegex = Regex(@"\s+")
 
-let private processVerbParticle
+let private addVerbParticle
    (particle: Particle)
-   (lexerState: LexerState)
-   : Result<unit, string> =
-   failwith "TODO"
+   (verb: PredicateBuilder)
+   : unit =
+   match particle.Spelling with
+   | "ti" -> verb.Mood <- Imperative
+   | _ -> failwith $"TODO: Process {particle}"
 
 let private processNounParticle
    (particle: Particle)
@@ -101,22 +101,49 @@ let private processNoun (noun: Noun) lexerState =
       Ok lexerState
 
 let private processVerb (verb: Verb) lexerState =
-   let predicate =
-      { BaseWord = verb
-        Mood = Indicative }
+   let predicate = { BaseWord = verb; Mood = Indicative }
    lexerState.Constituents.AddLast(Predicate predicate) |> ignore
    lexerState.LastReadArgument <- None
    lexerState.LastReadPredicate <- Some predicate
-   Ok lexerState
+   
+   let result =
+      lexerState.WaitingParticles
+      |> Seq.fold
+         (fun _ next ->
+            if next.ParticleType <> VerbParticle then
+               Error $"{next} cannot modify {verb}"
+            else
+               addVerbParticle next predicate
+               (Ok ())
+         )
+         (Ok ())
+   
+   match result with
+   | Ok () ->
+      lexerState.WaitingParticles.Clear()
+      Ok lexerState
+   | Error error -> Error error
 
 let private processParticle (particle: Particle) lexerState =
    let result =
       match particle with
       | :? PrefixParticle as prefixParticle ->
-         lexerState.WaitingParticles.AddLast(prefixParticle) |> ignore |> Ok
+         if
+            lexerState.WaitingParticles.Count > 0
+            && lexerState.WaitingParticles.First.Value.ParticleType
+               <> particle.ParticleType
+         then
+            Error $"Incompatible particle: {particle}"
+         else
+            lexerState.WaitingParticles.AddLast(prefixParticle) |> ignore |> Ok
       | :? PostfixParticle as postfixParticle ->
-         processVerbParticle postfixParticle lexerState
-         |> altResult (fun _ -> processNounParticle postfixParticle lexerState)
+         match postfixParticle.ParticleType with
+         | NounParticle -> failwith "TODO"
+         | VerbParticle ->
+            match lexerState.LastReadPredicate with
+            | Some predicate -> addVerbParticle postfixParticle predicate |> Ok
+            | None -> Error $"{postfixParticle} needs a verb to attach to"
+         | SentenceParticle -> failwith "TODO"
       | _ -> failwith "Unreachable"
 
    result
@@ -145,14 +172,14 @@ let buildArgument (ab: ArgumentBuilder) : Argument =
 
 let buildPredicate (pb: PredicateBuilder) : Predicate =
    { BaseWord = pb.BaseWord
-     Mood = Indicative
+     Mood = pb.Mood
      Tense = Incomplete
      Modifiers = Set.empty
      Negated = false }
 
 let toLexerResult (lexerState: LexerState) : Result<LexerResult, string> =
    if lexerState.WaitingParticles.Count > 0 then
-      Error $"Unused modifiers: {lexerState.WaitingParticles}"
+      Error $"Unused particles: {lexerState.WaitingParticles}"
    else
       lexerState.Constituents
       |> Seq.map (fun cb ->

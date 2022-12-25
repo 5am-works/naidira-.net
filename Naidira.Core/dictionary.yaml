@@ -355,25 +355,33 @@ prefix_particles:
 - spelling: ti
   simple_meaning: imperative particle
   first_appearance: Silika's Sleepsong
+  particle_type: verb
 - spelling: mui
   simple_meaning: not, do not
   first_appearance: Silika's Sleepsong
+  particle_type: verb
 - spelling: ne
   simple_meaning: argument 1 marker
   first_appearance: Silika's Sleepsong
+  particle_type: sentence
 postfix_particles:
 - spelling: ta
   simple_meaning: imperative marker (postfix)
   first_appearance: Nanori's Chant
+  particle_type: verb
 - spelling: vi
   simple_meaning: one's own
   first_appearance: Nanori's Chant
+  particle_type: noun
 - spelling: rita
   simple_meaning: perfect particle
   first_appearance: Silika's Sleepsong
+  particle_type: verb
 - spelling: li
   simple_meaning: optative particle
   first_appearance: Silika's Sleepsong
+  particle_type: verb
 - spelling: mine
   simple_meaning: can, may
   first_appearance: Silika's Sleepsong
+  particle_type: verb

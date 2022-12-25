@@ -23,13 +23,27 @@ type WordKindConverter() =
          | _ -> failwithf $"Invalid word kind: {value}"
       
       member this.WriteYaml(emitter, value, targetType) = ()
-   
+
+type ParticleTypeConverter() =
+   interface IYamlTypeConverter with
+      member this.Accepts(targetType) = targetType = typeof<ParticleType>
+      member this.ReadYaml(parser, _) =
+         let value = parser.Consume<Scalar>().Value
+         match value with
+         | "noun" -> NounParticle
+         | "verb" -> VerbParticle
+         | "sentence" -> SentenceParticle
+         | _ -> failwith $"Invalid particle type: {value}"
+         
+      member this.WriteYaml(emitter, value, targetType) = ()
+
 let lexiconInstance =
    lazy
       let deserializer =
          DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .WithTypeConverter(WordKindConverter())
+            .WithTypeConverter(ParticleTypeConverter())
             .Build()
 
       let file =

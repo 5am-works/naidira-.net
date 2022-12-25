@@ -20,8 +20,7 @@ type LexerTests() =
       let input = "levi ti bome"
       let expected =
          [ ar "levi"
-           pa "ti"
-           pr "bome" ]
+           pri "bome" ]
       this.TestLexer input expected
       
    [<Test>]
