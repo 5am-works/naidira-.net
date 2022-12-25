@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NaidiraClient.Data; 
+namespace Naidira.Client.Data; 
 
 public class SearchResults {
    [JsonPropertyName("word_results")] public List<DictionaryEntry> WordResults { get; init; } = null!;

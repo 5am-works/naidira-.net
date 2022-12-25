@@ -6,6 +6,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.Core.Tests", "Naidi
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Naidira.WordGenerator", "Naidira.WordGenerator\Naidira.WordGenerator.fsproj", "{FA4D1F0D-8856-481E-8A5D-4FF787EE5F6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naidira.Client", "Naidira.Client\Naidira.Client.csproj", "{89F1612B-FB76-41DE-8623-BE41181EE059}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{FA4D1F0D-8856-481E-8A5D-4FF787EE5F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA4D1F0D-8856-481E-8A5D-4FF787EE5F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA4D1F0D-8856-481E-8A5D-4FF787EE5F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89F1612B-FB76-41DE-8623-BE41181EE059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89F1612B-FB76-41DE-8623-BE41181EE059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89F1612B-FB76-41DE-8623-BE41181EE059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89F1612B-FB76-41DE-8623-BE41181EE059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
