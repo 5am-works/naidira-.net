@@ -92,7 +92,7 @@ type Lexicon() =
    member val PostfixModifiers: PostfixModifier[] = Array.empty with get, set
    member val PrefixParticles: PrefixParticle[] = Array.empty with get, set
    member val PostfixParticles: PostfixParticle[] = Array.empty with get, set
-   member private this.Index =
+   member this.Index =
       Seq.cast this.Nouns
       |> Seq.append (Seq.cast this.Verbs)
       |> Seq.append (Seq.cast this.Adjectives)

@@ -2,11 +2,15 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <AzureFunctionsVersion>V4</AzureFunctionsVersion>
-        <LangVersion>11</LangVersion>
+        <OutputType>Exe</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Naidira.Functions</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
+        <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.8.0" />
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.12" />
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="host.json">
@@ -16,6 +20,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+        <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Naidira.Core\Naidira.Core.fsproj" />

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Naidira.Client.Data;
+namespace Naidira.Interface;
 
 public class Word {
    [JsonPropertyName("type")] public string Type { get; set; } = "";
