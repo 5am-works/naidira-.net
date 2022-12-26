@@ -51,7 +51,10 @@ type ArgumentBuilder =
      Modifiers: HashSet<ModifierBuilder>
      Attributes: HashSet<WordAttribute> }
 
-and PredicateBuilder = { BaseWord: Verb; mutable Mood: Mood }
+and PredicateBuilder =
+   { BaseWord: Verb
+     mutable Mood: Mood
+     mutable Tense: Tense }
 
 and ModifierBuilder =
    { BaseWord: LModifier
@@ -75,14 +78,18 @@ let private addVerbParticle
    (verb: PredicateBuilder)
    : unit =
    match particle.Spelling with
-   | "ti" -> verb.Mood <- Imperative
+   | "ti" | "ta" -> verb.Mood <- Imperative
+   | "rita" -> verb.Tense <- Complete
+   | "li" -> verb.Mood <- Optative
    | _ -> failwith $"TODO: Process {particle}"
 
-let private processNounParticle
+let private addNounParticle
    (particle: Particle)
-   (lexerState: LexerState)
-   : Result<unit, string> =
-   failwith "TODO"
+   (argument: ArgumentBuilder)
+   : unit =
+   match particle.Spelling with
+   | "vi" -> argument.Attributes.Add(Personal) |> ignore
+   | _ -> failwith $"TODO: Process {particle}"
 
 let private processNoun (noun: Noun) lexerState =
    match lexerState.LastReadArgument with
@@ -101,23 +108,26 @@ let private processNoun (noun: Noun) lexerState =
       Ok lexerState
 
 let private processVerb (verb: Verb) lexerState =
-   let predicate = { BaseWord = verb; Mood = Indicative }
+   let predicate =
+      { BaseWord = verb
+        Mood = Indicative
+        Tense = Incomplete }
+
    lexerState.Constituents.AddLast(Predicate predicate) |> ignore
    lexerState.LastReadArgument <- None
    lexerState.LastReadPredicate <- Some predicate
-   
+
    let result =
       lexerState.WaitingParticles
       |> Seq.fold
-         (fun _ next ->
-            if next.ParticleType <> VerbParticle then
-               Error $"{next} cannot modify {verb}"
-            else
-               addVerbParticle next predicate
-               (Ok ())
-         )
-         (Ok ())
-   
+            (fun _ next ->
+               if next.ParticleType <> VerbParticle then
+                  Error $"{next} cannot modify {verb}"
+               else
+                  addVerbParticle next predicate
+                  (Ok()))
+            (Ok())
+
    match result with
    | Ok () ->
       lexerState.WaitingParticles.Clear()
@@ -138,7 +148,10 @@ let private processParticle (particle: Particle) lexerState =
             lexerState.WaitingParticles.AddLast(prefixParticle) |> ignore |> Ok
       | :? PostfixParticle as postfixParticle ->
          match postfixParticle.ParticleType with
-         | NounParticle -> failwith "TODO"
+         | NounParticle ->
+            match lexerState.LastReadArgument with
+            | Some argument -> addNounParticle postfixParticle argument |> Ok
+            | None -> Error $"{postfixParticle} needs a noun to attach to"
          | VerbParticle ->
             match lexerState.LastReadPredicate with
             | Some predicate -> addVerbParticle postfixParticle predicate |> Ok
@@ -173,7 +186,7 @@ let buildArgument (ab: ArgumentBuilder) : Argument =
 let buildPredicate (pb: PredicateBuilder) : Predicate =
    { BaseWord = pb.BaseWord
      Mood = pb.Mood
-     Tense = Incomplete
+     Tense = pb.Tense
      Modifiers = Set.empty
      Negated = false }
 
