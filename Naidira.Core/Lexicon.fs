@@ -60,10 +60,15 @@ type Noun() =
    member val SentenceInitial = false with get, set
    override this.WordType = WordType.Noun
 
+type AdditionalArgument() =
+   member val Particle: string = "" with get, set
+   member val Meaning: string = "" with get, set
+
 type Verb() =
    inherit Word()
    member val Valency = 0 with get, set
    member val FormattedMeaning = "" with get, set
+   member val AdditionalArguments: AdditionalArgument[] = Array.empty with get, set
 
    override this.WordType =
       match this.Valency with

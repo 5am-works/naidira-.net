@@ -214,6 +214,9 @@ verbs:
   first_appearance: Silika's Sleepsong
   valency: 2
   formatted_meaning: "{0} guides {1} (to a destination)"
+  additional_arguments:
+    - particle: na
+      meaning: destination
 - spelling: voto
   simple_meaning: go to
   first_appearance: Silika's Sleepsong
