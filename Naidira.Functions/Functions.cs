@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Naidira.Core;
 using Naidira.Interface;
+using WordType = Naidira.Core.Lexicon.WordType;
 
 namespace Naidira.Functions;
 
@@ -41,7 +42,8 @@ public static class Functions {
          var wordResult = new Word {
             Spelling = result.Spelling,
             SimpleMeaning = result.SimpleMeaning,
-            Type = result.WordType.ToString(),
+            FullMeaning = result.Meaning,
+            Type = result.WordType.Format(),
             FormattedMeaning = (result as Lexicon.Verb)?.FormattedMeaning,
             AttachmentNotes = (result as Lexicon.Modifier)?.AttachmentNotes
                .Select(str => str.ToNullable()).ToList(),
@@ -67,5 +69,18 @@ public static class Functions {
          Meaning = word.SimpleMeaning,
          WordType = word.WordType.ToString(),
       }).ToList();
+   }
+
+   private static string Format(this WordType wordType) {
+      return wordType.Tag switch {
+         WordType.Tags.Verb0 => "0-Verb",
+         WordType.Tags.Verb1 => "1-Verb",
+         WordType.Tags.Verb2 => "2-Verb",
+         WordType.Tags.PostfixModifier => "Postfix modifier",
+         WordType.Tags.PrefixModifier => "Prefix modifier",
+         WordType.Tags.PostfixParticle => "Postfix particle",
+         WordType.Tags.PrefixParticle => "Prefix particle",
+         _ => wordType.ToString(),
+      };
    }
 }

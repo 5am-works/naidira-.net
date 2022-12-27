@@ -16,7 +16,7 @@
       <Okena Height="50" Thickness="5" Text="@WordResult.Spelling"/>
       <div class="streko"></div>
       <p class="vorttipo">@WordResult.Type</p>
-      <p>@WordResult.SimpleMeaning</p>
+      <p>@WordResult.FullMeaning</p>
       if (WordResult.FormattedMeaning is not null) {
          <p>
             In context: @((MarkupString)string.Format(WordResult.FormattedMeaning,

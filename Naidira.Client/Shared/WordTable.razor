@@ -1,0 +1,25 @@
+﻿@using Naidira.Interface
+<table class="vortlisto">
+   <thead>
+   <tr>
+      <th>Word</th><th>Meaning</th>
+   </tr>
+   </thead>
+   <tbody>
+   @foreach (var word in Words) {
+      <tr>
+         <td>
+            <a href="/word/@word.Spelling">@word.Spelling</a>
+         </td>
+         <td>@word.Meaning</td>
+      </tr>
+   }
+   </tbody>
+</table>
+
+@code {
+
+   [Parameter, EditorRequired]
+   public IEnumerable<DictionaryEntry> Words { get; set; } = null!;
+
+}

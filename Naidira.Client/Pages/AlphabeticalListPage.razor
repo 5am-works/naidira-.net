@@ -5,11 +5,8 @@
 @if (Words == null) {
    <p>Loading</p>
 } else {
-   foreach (var word in Words) {
-      <SearchResult
-         Spelling="@word.Spelling"
-         Meaning="@word.Meaning"/>
-   }
+   <p class="centro">The dictionary contains @Words.Count words.</p>
+   <WordTable Words="Words"/>
 }
 
 @code {
