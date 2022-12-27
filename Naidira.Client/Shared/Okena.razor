@@ -1,25 +1,28 @@
 ﻿@inject IJSRuntime Js
 
-<canvas class="kanvaso" height="@Height" width="400" @ref="CanvasReference"></canvas>
+<canvas class="kanvaso" height="@Height" width="300" @ref="CanvasReference"></canvas>
 
 @code {
 
-    [Parameter, EditorRequired]
-    public int Height { get; set; }
+   [Parameter, EditorRequired]
+   public int Height { get; set; }
 
-    [Parameter, EditorRequired]
-    public string Text { get; set; } = null!;
+   [Parameter]
+   public float Thickness { get; set; } = 2.5F;
 
-    private ElementReference CanvasReference { get; set; }
-    private IJSObjectReference? _module;
+   [Parameter, EditorRequired]
+   public string Text { get; set; } = null!;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) {
-            _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Okena.js");
-            await _module.InvokeVoidAsync("drawText", Normalize(Text), CanvasReference, Height);
-        }
-    }
+   private ElementReference CanvasReference { get; set; }
+   private IJSObjectReference? _module;
 
-    private string Normalize(string text) => text.Replace("ei", "E").Replace("ai", "A").Replace("ou", "O").Replace("ui", "U");
+   protected override async Task OnAfterRenderAsync(bool firstRender) {
+      if (firstRender) {
+         _module = await Js.InvokeAsync<IJSObjectReference>("import", "./Okena.js");
+         await _module.InvokeVoidAsync("drawText", Normalize(Text), CanvasReference, Height, Thickness);
+      }
+   }
+
+   private string Normalize(string text) => text.Replace("ei", "E").Replace("ai", "A").Replace("ou", "O").Replace("ui", "U");
 
 }

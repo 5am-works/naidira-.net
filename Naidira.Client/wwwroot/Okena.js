@@ -289,8 +289,8 @@ Okena.desegniloj = new Map([
             ctx.beginPath();
             ctx.moveTo(longeco * 0.4 - 2, longeco * 0.7 + 1);
             ctx.lineTo(longeco * 0.4 - 2, longeco + (turni ? 0 : 2));
-            ctx.moveTo(longeco * 0.4 + 2, longeco * 0.7 + 1);
-            ctx.lineTo(longeco * 0.4 + 2, longeco + (turni ? 0 : 2));
+            ctx.moveTo(longeco * 0.4 + 4, longeco * 0.7 + 1);
+            ctx.lineTo(longeco * 0.4 + 4, longeco + (turni ? 0 : 2));
             ctx.stroke();
         }],
     ["U", (ctx, turni, longeco) => {
@@ -326,13 +326,13 @@ Okena.mallumajVokaloj = new Map([
     ['U', 'U'],
 ]);
 const okena = new Okena();
-export function drawText(text, canvas, longeco) {
+export function drawText(text, canvas, longeco, thickness = 2.5) {
     const ctx = canvas.getContext("2d");
-    const spaco = 4;
+    const spaco = thickness + 1.5;
     if (ctx != null) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = thickness;
         ctx.strokeStyle = "#e0e6f8";
         ctx.lineCap = 'round';
         okena.desegni(text, ctx, longeco - 20, spaco);

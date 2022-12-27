@@ -3,22 +3,23 @@
 @inject HttpClient HttpClient
 
 @if (Words == null) {
-    <p>Loading</p>
+   <p>Loading</p>
 } else {
-    foreach (var word in Words) {
-        <SearchResult
-            Spelling="@word.Spelling"
-            Meaning="@word.SimpleMeaning"/>
-    }
+   foreach (var word in Words) {
+      <SearchResult
+         Spelling="@word.Spelling"
+         Meaning="@word.Meaning"/>
+   }
 }
 
 @code {
-    private List<Word>? Words { get; set; }
+   private List<DictionaryEntry>? Words { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) {
-            Words = await HttpClient.GetFromJsonAsync<List<Word>>("/api/alphabetical");
-            StateHasChanged();
-        }
-    }
+   protected override async Task OnAfterRenderAsync(bool firstRender) {
+      if (firstRender) {
+         Words = await HttpClient.GetFromJsonAsync<List<DictionaryEntry>>("/api/alphabetical");
+         StateHasChanged();
+      }
+   }
+
 }

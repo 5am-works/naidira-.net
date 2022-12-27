@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Naidira.Core;
@@ -30,27 +28,44 @@ public static class Functions {
       };
    }
 
+   [Function("WordFunction")]
+   public static async Task<HttpResponseData> GetWord([HttpTrigger(
+         AuthorizationLevel.Anonymous, "get",
+         Route = "word/{word}")]
+      HttpRequestData request,
+      string word
+   ) {
+      var result = Lexicon.Lookup(word).ToNullable();
+      var response = request.CreateResponse();
+      if (result is not null) {
+         var wordResult = new Word {
+            Spelling = result.Spelling,
+            SimpleMeaning = result.SimpleMeaning,
+            Type = result.WordType.ToString(),
+            FormattedMeaning = (result as Lexicon.Verb)?.FormattedMeaning,
+            AttachmentNotes = (result as Lexicon.Modifier)?.AttachmentNotes
+               .Select(str => str.ToNullable()).ToList(),
+            AttachmentTypes = (result as Lexicon.Modifier)?.AttachmentTypes
+               .Select(t => t.ToString()).ToList(),
+            ModifiableTypes = (result as Lexicon.Modifier)?.ModifiableTypes
+               .Select(t => t.ToString()).ToList(),
+         };
+         await response.WriteAsJsonAsync(wordResult);
+      } else {
+         response.StatusCode = HttpStatusCode.NotFound;
+      }
+
+      return response;
+   }
+
    [Function("AlphabeticalListFunction")]
-   public static List<Word> AlphabeticalList(
+   public static List<DictionaryEntry> AlphabeticalList(
       [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "alphabetical")]
       HttpRequestData request) {
-      return Lexicon.Index.Values.Select(word => new Word {
+      return Lexicon.Index.Values.Select(word => new DictionaryEntry {
          Spelling = word.Spelling,
-         SimpleMeaning = word.SimpleMeaning,
-         Type = word.WordType.ToString(),
-         FormattedMeaning = word is Lexicon.Verb v ? v.FormattedMeaning : null,
-         AttachmentNotes =
-            word is Lexicon.Modifier m
-               ? m.AttachmentNotes.Select(str => str.ToNullable()).ToList()
-               : null,
-         AttachmentTypes =
-            word is Lexicon.Modifier m2
-               ? m2.AttachmentTypes.Select(t => t.ToString()).ToList()
-               : null,
-         ModifiableTypes =
-            word is Lexicon.Modifier m3
-               ? m3.ModifiableTypes.Select(t => t.ToString()).ToList()
-               : null,
+         Meaning = word.SimpleMeaning,
+         WordType = word.WordType.ToString(),
       }).ToList();
    }
 }

@@ -1,0 +1,50 @@
+﻿@page "/word/{word}"
+@using Naidira.Interface
+@using System.Net
+@inject HttpClient HttpClient
+@inject ILogger<WordPage> Logger
+
+<PageTitle>@Word | Naidira</PageTitle>
+
+<div>
+   @if (Error is not null) {
+      <p>@Error</p>
+   } else if (WordResult is null) {
+      <p>Loading...</p>
+   } else {
+      <h2 class="vorto">@WordResult.Spelling</h2>
+      <Okena Height="50" Thickness="5" Text="@WordResult.Spelling"/>
+      <div class="streko"></div>
+      <p class="vorttipo">@WordResult.Type</p>
+      <p>@WordResult.SimpleMeaning</p>
+      if (WordResult.FormattedMeaning is not null) {
+         <p>
+            In context: @((MarkupString)string.Format(WordResult.FormattedMeaning,
+                           "a<sub>1</sub>", "a<sub>2</sub>"))
+         </p>
+      }
+   }
+</div>
+
+@code {
+
+   [Parameter]
+   public string Word { get; set; } = "";
+
+   private Word? WordResult { get; set; }
+   private string? Error { get; set; }
+
+   protected override async Task OnParametersSetAsync() {
+      try {
+         WordResult = await HttpClient.GetFromJsonAsync<Word>($"/api/word/{Word}");
+      } catch (HttpRequestException e) {
+         if (e.StatusCode == HttpStatusCode.NotFound) {
+            Error = $"Word not found: {Word}";
+         } else {
+            Error = $"An error occurred while fetching {Word}";
+            Logger.LogError(e, message: null);
+         }
+      }
+   }
+
+}

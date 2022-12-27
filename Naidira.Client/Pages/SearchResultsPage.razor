@@ -2,11 +2,10 @@
 @using Naidira.Interface
 @inject HttpClient HttpClient
 
-<p>Search results for @Query:</p>
+<p>Search results for "@Query":</p>
 @if (Results is null) {
     <p>Loading results</p>
 } else {
-    <p>Total results: @(Results?.WordResults.Count)</p>
     @foreach (var result in Results!.WordResults) {
         <SearchResult Spelling="@result.Spelling"
                       Meaning="@result.Meaning"/>

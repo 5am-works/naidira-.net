@@ -8,5 +8,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient("APIClient", client => client.BaseAddress = builder.HostEnvironment.IsDevelopment() ?
    new Uri("http://localhost:7071/") : new Uri("https://naidira-api.azurewebsites.net"));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("APIClient"));
+var host = builder.Build();
+host.Services.GetRequiredService<ILoggerFactory>()
+   .CreateLogger<Program>();
 
-await builder.Build().RunAsync();
+await host.RunAsync();

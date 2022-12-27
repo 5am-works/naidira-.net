@@ -14,12 +14,12 @@ type WordType =
    | PostfixModifier
    | PrefixParticle
    | PostfixParticle
-   
+
 type ParticleType =
    | NounParticle
    | VerbParticle
    | SentenceParticle
-   
+
 type WordKind =
    | Nounlike
    | Verblike
@@ -30,26 +30,41 @@ type WordKind =
 type Word() =
    member val Spelling = "" with get, set
    member val SimpleMeaning = "" with get, set
+   member val FullMeaning = "" with get, set
    member val FirstAppearance: string option = None with get, set
-   abstract WordType: WordType with get
-   
+   abstract WordType: WordType
+
+   member this.Meaning =
+      if this.FullMeaning.Length = 0 then
+         this.SimpleMeaning
+      else
+         this.FullMeaning
+
    interface IComparable with
       member this.CompareTo(other) =
          match other with
          | :? Word as word -> this.Spelling.CompareTo(word.Spelling)
          | _ -> failwithf $"Cannot compare with %s{other.ToString()}"
-   
+
    override this.ToString() = this.Spelling
+
+   override this.Equals(other) =
+      match other with
+      | :? Word as word -> this.Spelling = word.Spelling
+      | _ -> false
+
+   override this.GetHashCode() = this.Spelling.GetHashCode()
 
 type Noun() =
    inherit Word()
    member val SentenceInitial = false with get, set
    override this.WordType = WordType.Noun
-   
+
 type Verb() =
    inherit Word()
    member val Valency = 0 with get, set
    member val FormattedMeaning = "" with get, set
+
    override this.WordType =
       match this.Valency with
       | 0 -> Verb0
@@ -62,11 +77,11 @@ type Modifier() =
    member val ModifiableTypes: WordKind[] = Array.empty with get, set
    member val AttachmentTypes: WordKind[] = Array.empty with get, set
    member val AttachmentNotes: string option[] = Array.empty with get, set
-      
+
 type PrefixModifier() =
    inherit Modifier()
    override this.WordType = WordType.PrefixModifier
-   
+
 type PostfixModifier() =
    inherit Modifier()
    override this.WordType = WordType.PostfixModifier
@@ -92,6 +107,7 @@ type Lexicon() =
    member val PostfixModifiers: PostfixModifier[] = Array.empty with get, set
    member val PrefixParticles: PrefixParticle[] = Array.empty with get, set
    member val PostfixParticles: PostfixParticle[] = Array.empty with get, set
+
    member this.Index =
       Seq.cast this.Nouns
       |> Seq.append (Seq.cast this.Verbs)
@@ -102,11 +118,16 @@ type Lexicon() =
       |> Seq.append (Seq.cast this.PrefixParticles)
       |> Seq.map (fun (word: Word) -> word.Spelling, word)
       |> Map.ofSeq
-   
-   member this.WordCount with get() =
-      this.Nouns.Length + this.Adjectives.Length + this.Verbs.Length + this.PrefixModifiers.Length +
-         this.PostfixModifiers.Length + this.PrefixParticles.Length + this.PostfixParticles.Length
-         
-   member this.Lookup (word: string): Word option = Map.tryFind word this.Index
-   
-   member this.Get (word: string) = Map.find word this.Index
+
+   member this.WordCount =
+      this.Nouns.Length
+      + this.Adjectives.Length
+      + this.Verbs.Length
+      + this.PrefixModifiers.Length
+      + this.PostfixModifiers.Length
+      + this.PrefixParticles.Length
+      + this.PostfixParticles.Length
+
+   member this.Lookup(word: string) : Word option = Map.tryFind word this.Index
+
+   member this.Get(word: string) = Map.find word this.Index
